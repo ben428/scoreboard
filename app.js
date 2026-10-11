@@ -288,7 +288,7 @@ function render(){
   const nextWithinSeasonWindow=next&&(daysUntilNext<=7||(daysUntilNext<=35&&sameSeason(latestFinal,next)));
   const game=live||pending||(latest&&relevant(latest,now)?latest:null)||(nextWithinSeasonWindow?next:null);
   if(d&&!d.error&&!game)return '';
-  const inside=d?.error?'<p>Scores are temporarily unavailable. Try refreshing.</p>':!d?'<p>Loading scores…</p>':!game?'<p>No games available in the current schedule.</p>':`<div class="label ${live?'live':''}">${gameHeading(game,t.path,'● LIVE · ')}</div>${(comp(game)?.competitors||[]).slice().sort((a,b)=>(a.homeAway==='home')-(b.homeAway==='home')).map(c=>`<div class="row"><span>${c.team?.logo?`<img src="${esc(c.team.logo)}" alt="" onerror="this.style.display='none'">`:''}${eloLabel(game,c,t.path)}${teamLink(c.team?.shortDisplayName||c.team?.displayName,t.path,c.team?.id)}</span><span class="score">${gameScore(game,c)}</span></div>`).join('')}<div class="details">${esc(comp(game)?.venue?.fullName||'')}</div>${gameFooter(game,t.path,events)}`;
+  const inside=d?.error?'<p>Scores are temporarily unavailable. Try refreshing.</p>':!d?'<p>Loading scores…</p>':!game?'<p>No games available in the current schedule.</p>':`<div class="label ${live?'live':''}">${gameHeading(game,t.path,'● LIVE · ')}</div>${(comp(game)?.competitors||[]).slice().sort((a,b)=>(a.homeAway==='home')-(b.homeAway==='home')).map(c=>`<div class="row"><span>${c.team?.logo?`<img src="${esc(c.team.logo)}" alt="" onerror="this.style.display='none'">`:''}${eloLabel(game,c,t.path)}${teamLink(c.team?.shortDisplayName||c.team?.displayName,t.path,c.team?.id)}${cardRecord(game,c,t.path)?` <small class="teamrecord">(${esc(cardRecord(game,c,t.path))})</small>`:''}</span><span class="score">${gameScore(game,c)}</span></div>`).join('')}<div class="details">${esc(comp(game)?.venue?.fullName||'')}</div>${gameFooter(game,t.path,events)}`;
   return `<article class="card" style="--accent:${t.color}"><div class="cardhead"><span class="team-icon"><img src="https://a.espncdn.com/i/teamlogos/${t.path.includes('college')?'ncaa':t.path.split('/')[1]}/500/${t.id}.png" alt="${esc(t.name)} logo" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span class="monogram" hidden>${t.mark}</span></span><div><div class="teamname">${teamLink(t.short,t.path,t.id)}</div><div class="league">${t.league}</div></div></div><div class="game">${inside}${feedNotice(d)}</div>${nextWithinSeasonWindow&&next.id!==game?.id?`<div class="next"><b>NEXT GAME</b>${gameDateTime(next,t.path)}<br>${matchupPrefix(next,t)} ${opponentLink(next,t)}</div>`:''}</article>`;
  }).join('');
  upcoming.sort((a,b)=>chronological(a.e,b.e));
@@ -319,10 +319,35 @@ function leagueFilters(){
 }
 // ESPN scoreboard competitors provide overall records and a national curated rank.
 function competitorRecord(c){
- const records=c.records||[];
- const overall=records.find(r=>/^(overall|total)$/i.test(r.type||r.name||''))||records.find(r=>r.summary)||null;
- const summary=overall?.summary||c.record||'';
+ const records=Array.isArray(c.records)?c.records:Array.isArray(c.record)?c.record:[];
+ const overall=records.find(r=>/^(overall|total)$/i.test(r.type||r.name||''))||records.find(r=>r.summary||r.displayValue)||null;
+ const summary=overall?.summary||overall?.displayValue||(typeof c.record==='string'?c.record:'');
  return typeof summary==='string'&&/^\d+-\d+(?:-\d+)?$/.test(summary.trim())?summary.trim():'';
+}
+const upcomingRecords=new Map();
+function cardRecord(e,c,path){
+ const supplied=competitorRecord(c);
+ if(supplied||!isUpcoming(e))return supplied;
+ return upcomingRecords.get(`${path}:${c.team?.id}:${e.season?.year}`)?.record||'';
+}
+async function loadUpcomingRecords(){
+ const requests=new Map();
+ teams.forEach((t,i)=>{
+  const next=(data[i]?.events||[]).filter(e=>isUpcoming(e)&&eventTime(e)-Date.now()<=35*86400000).sort(chronological)[0];
+  if(!next||!next.season?.year)return;
+  (comp(next)?.competitors||[]).forEach(c=>{
+   if(competitorRecord(c)||!c.team?.id)return;
+   const key=`${t.path}:${c.team.id}:${next.season.year}`;
+   if(Date.now()-(upcomingRecords.get(key)?.loaded||0)<3600000)return;
+   requests.set(key,{path:t.path,id:c.team.id,season:next.season.year});
+  });
+ });
+ await Promise.allSettled([...requests].map(async([key,t])=>{
+  const feed=await fetchJSON(`https://site.api.espn.com/apis/site/v2/sports/${t.path}/teams/${t.id}/schedule?seasontype=2&season=${encodeURIComponent(t.season)}`);
+  if(String(feed.team?.seasonSummary)!==String(t.season))return;
+  const record=competitorRecord({record:feed.team?.recordSummary});
+  if(record)upcomingRecords.set(key,{record,loaded:Date.now()});
+ }));
 }
 function competitorRank(c,l){
  if(!l.path.includes('college-football'))return '';
@@ -413,7 +438,7 @@ async function load(){
   const results=await Promise.allSettled([loadLeagues(),...teams.map(loadTeam)]);
   if(results.some(r=>r.status==='rejected'))throw Error('Unable to render scores');
   syncTeamScores();
-  await Promise.allSettled([loadMLBLinks(),loadNFLElo(),loadFOXLinks()]);
+  await Promise.allSettled([loadMLBLinks(),loadNFLElo(),loadFOXLinks(),loadUpcomingRecords()]);
   renderLeagues();
   render();
   updateToday();
