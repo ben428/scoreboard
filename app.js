@@ -388,6 +388,20 @@ async function loadTeam(t,i){
   data[i]={events:mergeEvents(Object.values(seasonFeeds)),seasonFeeds,partial:results.some(r=>r.status==='rejected')};
  }catch{data[i]=retainOnFailure(previous)}
 }
+function syncTeamScores(){
+ teams.forEach((t,i)=>{
+  const feeds=leagueData.filter((feed,j)=>leagues[j].path===t.path&&feed&&!feed.error&&!feed.partial&&!feed.stale);
+  const current=mergeEvents(feeds).filter(e=>(comp(e)?.competitors||[]).some(c=>String(c.team?.id)===t.id));
+  if(!current.length)return;
+  const previous=data[i];
+  const events=new Map((previous?.events||[]).map(e=>[String(e.id),e]));
+  current.forEach(e=>{
+   const scheduled=events.get(String(e.id));
+   events.set(String(e.id),{...scheduled,...e});
+  });
+  data[i]={...previous,events:[...events.values()],error:false,partial:!!(previous?.partial||previous?.error)};
+ });
+}
 async function load(){
  if(busy)return;
  busy=true;
@@ -398,6 +412,7 @@ async function load(){
   updateToday();
   const results=await Promise.allSettled([loadLeagues(),...teams.map(loadTeam)]);
   if(results.some(r=>r.status==='rejected'))throw Error('Unable to render scores');
+  syncTeamScores();
   await Promise.allSettled([loadMLBLinks(),loadNFLElo(),loadFOXLinks()]);
   renderLeagues();
   render();
