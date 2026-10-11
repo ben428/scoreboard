@@ -12,6 +12,6 @@ After publishing, check scores, game links, and refresh in Safari on the iPod To
 
 ## Maintaining the site
 
-Editable source lives in `work/scoreboard/dist/`. Copy `index.html` and `app.js` from there to the repository root before publishing changes. `outputs/scoreboard.html` is a standalone review copy, not the Pages entry point.
+Editable source lives in `work/scoreboard/dist/`. Copy `index.html`, `app.js`, `favicon.ico`, `favicon.svg`, and `apple-touch-icon.png` from there to the repository root before publishing changes. `outputs/scoreboard.html` is a standalone review copy, not the Pages entry point.
 
 Run scheduling checks with `node work/scoreboard/tests/scheduling.js` when Node.js is available.
