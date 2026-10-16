@@ -236,11 +236,29 @@ function gameFooter(e,path,events=[]){
  const highlights=highlightsLink(e,path,events),badge=upsetLabel(e,path);
  return highlights||badge?`<div class="gamefooter">${highlights}${badge}</div>`:'';
 }
-function gameDateTime(e,path){return gameLink(e,date(e.date)+(state(e)==='pre'&&!condition(e)?' · '+gameTime(e):''),path)}
+function broadcastNetworks(e){
+ const competition=comp(e)||{},names=[],seen=new Set();
+ const add=name=>{
+  if(typeof name!=='string')return;
+  const text=name.trim(),key=text.toLowerCase();
+  if(!text||/^(tbd|tba)$/i.test(text)||seen.has(key))return;
+  seen.add(key);names.push(text);
+ };
+ const entries=[...(Array.isArray(competition.geoBroadcasts)?competition.geoBroadcasts:[]),...(Array.isArray(competition.broadcasts)?competition.broadcasts:[])];
+ entries.forEach(b=>{
+  if(!b||String(b.type?.id)==='5'||/radio/i.test(b.type?.shortName||''))return;
+  if(Array.isArray(b.names))b.names.forEach(add);
+  add(b.media?.shortName);
+ });
+ if(!names.length)add(competition.broadcast);
+ return names.join(' / ');
+}
+function broadcastSuffix(e){const networks=broadcastNetworks(e);return networks?' · '+networks:''}
+function gameDateTime(e,path){return gameLink(e,date(e.date)+(state(e)==='pre'&&!condition(e)?' · '+gameTime(e):'')+broadcastSuffix(e),path)}
 function gameHeading(e,path,livePrefix=''){
  const detail=state(e)==='pre'&&!condition(e)?'':status(e).replace(/\s*\b(?:ET|EST|EDT|CT|CST|CDT|MT|MST|MDT|PT|PST|PDT|UTC|GMT)\b/g,'').trim();
- if(isLive(e))return gameLink(e,livePrefix+date(e.date)+(detail?' · '+detail:''),path);
- if(isResult(e)||condition(e))return gameLink(e,date(e.date)+(detail?' · '+detail:''),path);
+ if(isLive(e))return gameLink(e,livePrefix+date(e.date)+(detail?' · '+detail:'')+broadcastSuffix(e),path);
+ if(isResult(e)||condition(e))return gameLink(e,date(e.date)+(detail?' · '+detail:'')+broadcastSuffix(e),path);
  return gameDateTime(e,path)+(detail?' · '+esc(detail):'');
 }
 function relevant(e,now=Date.now()){
@@ -253,7 +271,7 @@ function relevant(e,now=Date.now()){
 }
 function scheduleRow({e,t}){
  const detail=condition(e)|| (isFinal(e)?(comp(e)?.competitors||[]).map(c=>score(c)).join(' – ')+' · '+status(e):gameTime(e));
- return `<div class="scheduleitem"><div>${gameLink(e,date(e.date),t.path)}</div><div><strong>${teamLink(t.short,t.path,t.id)}</strong><br><small>${matchupPrefix(e,t)} ${opponentLink(e,t)}</small></div><small class="sport">${t.league}</small><div>${gameLink(e,detail,t.path)}</div></div>`;
+ return `<div class="scheduleitem"><div>${gameLink(e,date(e.date),t.path)}</div><div><strong>${teamLink(t.short,t.path,t.id)}</strong><br><small>${matchupPrefix(e,t)} ${opponentLink(e,t)}</small></div><small class="sport">${t.league}</small><div>${gameLink(e,detail+broadcastSuffix(e),t.path)}</div></div>`;
 }
 function pastResultRow({e,t,events}){
  const competitors=(comp(e)?.competitors||[]).slice().sort((a,b)=>(a.homeAway==='home')-(b.homeAway==='home'));
