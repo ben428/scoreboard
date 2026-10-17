@@ -1,0 +1,67 @@
+name: Update ratings and deploy scoreboard
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '17 10,22 * * *'
+  workflow_dispatch:
+concurrency:
+  group: scoreboard-pages
+  cancel-in-progress: false
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      deploy: ${{ steps.changes.outputs.deploy }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+      - name: Refresh validated ratings (retain last good file on failure)
+        id: ratings
+        continue-on-error: true
+        run: python3 scripts/update-nfl-elo.py
+      - name: Save changes
+        id: changes
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if ! git diff --quiet -- nfl-elo.json; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add -- nfl-elo.json
+            git commit -m 'Update NFL pregame Elo ratings'
+            git push origin HEAD:main
+            echo 'deploy=true' >> "$GITHUB_OUTPUT"
+          elif [ "$EVENT_NAME" != 'schedule' ]; then
+            echo 'deploy=true' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Report retained snapshot
+        if: steps.ratings.outcome == 'failure'
+        run: echo '::warning::Ratings refresh failed. Keeping last verified snapshot.'
+      - name: Prepare static site
+        if: steps.changes.outputs.deploy == 'true'
+        run: |
+          mkdir _site
+          cp index.html app.js favicon.ico favicon.svg apple-touch-icon.png nfl-elo.json .nojekyll _site/
+      - uses: actions/upload-pages-artifact@v4
+        if: steps.changes.outputs.deploy == 'true'
+        with:
+          path: _site
+  deploy:
+    needs: build
+    if: needs.build.outputs.deploy == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: deployment

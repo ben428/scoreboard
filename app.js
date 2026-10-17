@@ -78,7 +78,7 @@ let nflElo=parseNFLElo(bundledNFLElo),nflEloLoaded=0;
 async function loadNFLElo(){
  if(nflEloLoaded&&Date.now()-nflEloLoaded<3600000)return;
  try{
-  const parsed=parseNFLElo(await fetchJSON('https://nflanalytic.com/data/predictions.json'));
+  const parsed=parseNFLElo(await fetchJSON('nfl-elo.json?v='+Math.floor(Date.now()/3600000)));
   if(parsed&&(!nflElo||parsed.season>nflElo.season||(parsed.season===nflElo.season&&String(parsed.updated)>=String(nflElo.updated)))){nflElo=parsed;nflEloLoaded=Date.now()}
  }catch{/* Retain verified pregame data, never substitute current postgame ratings. */}
 }
@@ -105,6 +105,7 @@ function nflEloRank(e,c){
  // Equal ratings share a position; the next position skips the tied places.
  return 1+[...ratings.values()].filter(value=>value>rating).length;
 }
+function updateEloDate(){const node=document.querySelector('#elo-updated');if(node)node.textContent=' · ratings updated '+(nflElo?.updated||'unavailable')}
 function eloLabel(e,c,path){
  if(path!=='football/nfl')return '';
  const rank=nflEloRank(e,c);
@@ -459,6 +460,7 @@ async function load(){
   await Promise.allSettled([loadMLBLinks(),loadNFLElo(),loadFOXLinks(),loadUpcomingRecords()]);
   renderLeagues();
   render();
+  updateEloDate();
   updateToday();
   const failed=[...data,...leagueData].filter(d=>d?.error||d?.partial||d?.stale).length;
   message.textContent=failed?`${failed} scoreboard${failed>1?'s':''} unavailable or out of date · retrying automatically`:`Updated ${time(new Date())}`;

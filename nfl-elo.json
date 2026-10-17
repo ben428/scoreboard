@@ -1,0 +1,747 @@
+{
+  "site": "nflanalytic.com",
+  "season": 2026,
+  "updated": "2026-10-16",
+  "weeks": {
+    "1": [
+      {
+        "gameday": "2026-09-09",
+        "home": "SEA",
+        "away": "NE",
+        "elo_home": 1674.6,
+        "elo_away": 1592.8,
+        "locked": "2026-08-12"
+      },
+      {
+        "gameday": "2026-09-10",
+        "home": "LA",
+        "away": "SF",
+        "elo_home": 1614.7,
+        "elo_away": 1559.4,
+        "locked": "2026-08-12"
+      },
+      {
+        "gameday": "2026-09-13",
+        "home": "PIT",
+        "away": "ATL",
+        "elo_home": 1516.0,
+        "elo_away": 1470.3,
+        "locked": "2026-08-12"
+      },
+      {
+        "gameday": "2026-09-13",
+        "home": "IND",
+        "away": "BAL",
+        "elo_home": 1469.4,
+        "elo_away": 1553.4,
+        "locked": "2026-08-12"
+      },
+      {
+        "gameday": "2026-09-13",
+        "home": "HOU",
+        "away": "BUF",
+        "elo_home": 1605.6,
+        "elo_away": 1615.9,
+        "locked": "2026-08-12"
+      },
+      {
+        "gameday": "2026-09-13",
+        "home": "CAR",
+        "away": "CHI",
+        "elo_home": 1426.3,
+        "elo_away": 1528.7,
+        "locked": "2026-08-12"
+      },
+      {
+        "gameday": "2026-09-13",
+        "home": "JAX",
+        "away": "CLE",
+        "elo_home": 1565.9,
+        "elo_away": 1419.9,
+        "locked": "2026-08-12"
+      },
+      {
+        "gameday": "2026-09-13",
+        "home": "DET",
+        "away": "NO",
+        "elo_home": 1563.9,
+        "elo_away": 1435.3,
+        "locked": "2026-08-12"
+      },
+      {
+        "gameday": "2026-09-13",
+        "home": "TEN",
+        "away": "NYJ",
+        "elo_home": 1349.8,
+        "elo_away": 1361.5,
+        "locked": "2026-08-12"
+      },
+      {
+        "gameday": "2026-09-13",
+        "home": "CIN",
+        "away": "TB",
+        "elo_home": 1480.4,
+        "elo_away": 1488.4,
+        "locked": "2026-08-12"
+      },
+      {
+        "gameday": "2026-09-13",
+        "home": "LAC",
+        "away": "ARI",
+        "elo_home": 1530.9,
+        "elo_away": 1394.4,
+        "locked": "2026-08-12"
+      },
+      {
+        "gameday": "2026-09-13",
+        "home": "MIN",
+        "away": "GB",
+        "elo_home": 1556.1,
+        "elo_away": 1535.9,
+        "locked": "2026-08-12"
+      },
+      {
+        "gameday": "2026-09-13",
+        "home": "LV",
+        "away": "MIA",
+        "elo_home": 1351.0,
+        "elo_away": 1459.1,
+        "locked": "2026-08-12"
+      },
+      {
+        "gameday": "2026-09-13",
+        "home": "PHI",
+        "away": "WAS",
+        "elo_home": 1581.2,
+        "elo_away": 1458.2,
+        "locked": "2026-08-12"
+      },
+      {
+        "gameday": "2026-09-13",
+        "home": "NYG",
+        "away": "DAL",
+        "elo_home": 1419.3,
+        "elo_away": 1460.7,
+        "locked": "2026-08-12"
+      },
+      {
+        "gameday": "2026-09-14",
+        "home": "KC",
+        "away": "DEN",
+        "elo_home": 1508.2,
+        "elo_away": 1612.6,
+        "locked": "2026-08-12"
+      }
+    ],
+    "2": [
+      {
+        "gameday": "2026-09-17",
+        "home": "BUF",
+        "away": "DET",
+        "elo_home": 1635.5,
+        "elo_away": 1567.3,
+        "locked": "2026-09-15"
+      },
+      {
+        "gameday": "2026-09-20",
+        "home": "ATL",
+        "away": "CAR",
+        "elo_home": 1455.6,
+        "elo_away": 1400.4,
+        "locked": "2026-09-15"
+      },
+      {
+        "gameday": "2026-09-20",
+        "home": "HOU",
+        "away": "CIN",
+        "elo_home": 1586.1,
+        "elo_away": 1497.3,
+        "locked": "2026-09-15"
+      },
+      {
+        "gameday": "2026-09-20",
+        "home": "TB",
+        "away": "CLE",
+        "elo_home": 1471.5,
+        "elo_away": 1405.4,
+        "locked": "2026-09-15"
+      },
+      {
+        "gameday": "2026-09-20",
+        "home": "NYJ",
+        "away": "GB",
+        "elo_home": 1390.2,
+        "elo_away": 1513.3,
+        "locked": "2026-09-15"
+      },
+      {
+        "gameday": "2026-09-20",
+        "home": "CHI",
+        "away": "MIN",
+        "elo_home": 1554.5,
+        "elo_away": 1578.7,
+        "locked": "2026-09-15"
+      },
+      {
+        "gameday": "2026-09-20",
+        "home": "BAL",
+        "away": "NO",
+        "elo_home": 1579.4,
+        "elo_away": 1431.9,
+        "locked": "2026-09-15"
+      },
+      {
+        "gameday": "2026-09-20",
+        "home": "TEN",
+        "away": "PHI",
+        "elo_home": 1321.1,
+        "elo_away": 1586.8,
+        "locked": "2026-09-15"
+      },
+      {
+        "gameday": "2026-09-20",
+        "home": "NE",
+        "away": "PIT",
+        "elo_home": 1584.4,
+        "elo_away": 1530.7,
+        "locked": "2026-09-15"
+      },
+      {
+        "gameday": "2026-09-20",
+        "home": "DEN",
+        "away": "JAX",
+        "elo_home": 1577.6,
+        "elo_away": 1580.5,
+        "locked": "2026-09-15"
+      },
+      {
+        "gameday": "2026-09-20",
+        "home": "LAC",
+        "away": "LV",
+        "elo_home": 1495.8,
+        "elo_away": 1381.8,
+        "locked": "2026-09-15"
+      },
+      {
+        "gameday": "2026-09-20",
+        "home": "SF",
+        "away": "MIA",
+        "elo_home": 1593.8,
+        "elo_away": 1428.3,
+        "locked": "2026-09-15"
+      },
+      {
+        "gameday": "2026-09-20",
+        "home": "ARI",
+        "away": "SEA",
+        "elo_home": 1429.6,
+        "elo_away": 1683.0,
+        "locked": "2026-09-15"
+      },
+      {
+        "gameday": "2026-09-20",
+        "home": "DAL",
+        "away": "WAS",
+        "elo_home": 1439.2,
+        "elo_away": 1452.7,
+        "locked": "2026-09-15"
+      },
+      {
+        "gameday": "2026-09-20",
+        "home": "KC",
+        "away": "IND",
+        "elo_home": 1543.2,
+        "elo_away": 1443.4,
+        "locked": "2026-09-15"
+      },
+      {
+        "gameday": "2026-09-21",
+        "home": "LA",
+        "away": "NYG",
+        "elo_home": 1580.3,
+        "elo_away": 1440.8,
+        "locked": "2026-09-15"
+      }
+    ],
+    "3": [
+      {
+        "gameday": "2026-09-24",
+        "home": "GB",
+        "away": "ATL",
+        "elo_home": 1523.8,
+        "elo_away": 1412.9,
+        "locked": "2026-09-22"
+      },
+      {
+        "gameday": "2026-09-27",
+        "home": "CLE",
+        "away": "CAR",
+        "elo_home": 1425.5,
+        "elo_away": 1443.1,
+        "locked": "2026-09-22"
+      },
+      {
+        "gameday": "2026-09-27",
+        "home": "PIT",
+        "away": "CIN",
+        "elo_home": 1510.9,
+        "elo_away": 1532.4,
+        "locked": "2026-09-22"
+      },
+      {
+        "gameday": "2026-09-27",
+        "home": "IND",
+        "away": "HOU",
+        "elo_home": 1435.6,
+        "elo_away": 1551.1,
+        "locked": "2026-09-22"
+      },
+      {
+        "gameday": "2026-09-27",
+        "home": "MIA",
+        "away": "KC",
+        "elo_home": 1415.3,
+        "elo_away": 1551.0,
+        "locked": "2026-09-22"
+      },
+      {
+        "gameday": "2026-09-27",
+        "home": "BUF",
+        "away": "LAC",
+        "elo_home": 1650.9,
+        "elo_away": 1461.5,
+        "locked": "2026-09-22"
+      },
+      {
+        "gameday": "2026-09-27",
+        "home": "JAX",
+        "away": "NE",
+        "elo_home": 1562.8,
+        "elo_away": 1604.1,
+        "locked": "2026-09-22"
+      },
+      {
+        "gameday": "2026-09-27",
+        "home": "DET",
+        "away": "NYJ",
+        "elo_home": 1551.9,
+        "elo_away": 1379.6,
+        "locked": "2026-09-22"
+      },
+      {
+        "gameday": "2026-09-27",
+        "home": "WAS",
+        "away": "SEA",
+        "elo_home": 1427.0,
+        "elo_away": 1696.8,
+        "locked": "2026-09-22"
+      },
+      {
+        "gameday": "2026-09-27",
+        "home": "NYG",
+        "away": "TEN",
+        "elo_home": 1426.1,
+        "elo_away": 1314.6,
+        "locked": "2026-09-22"
+      },
+      {
+        "gameday": "2026-09-27",
+        "home": "SF",
+        "away": "ARI",
+        "elo_home": 1606.7,
+        "elo_away": 1415.8,
+        "locked": "2026-09-22"
+      },
+      {
+        "gameday": "2026-09-27",
+        "home": "TB",
+        "away": "MIN",
+        "elo_home": 1451.3,
+        "elo_away": 1599.3,
+        "locked": "2026-09-22"
+      },
+      {
+        "gameday": "2026-09-27",
+        "home": "DAL",
+        "away": "BAL",
+        "elo_home": 1464.8,
+        "elo_away": 1550.6,
+        "locked": "2026-09-22"
+      },
+      {
+        "gameday": "2026-09-27",
+        "home": "NO",
+        "away": "LV",
+        "elo_home": 1460.7,
+        "elo_away": 1416.1,
+        "locked": "2026-09-22"
+      },
+      {
+        "gameday": "2026-09-27",
+        "home": "DEN",
+        "away": "LA",
+        "elo_home": 1595.4,
+        "elo_away": 1595.0,
+        "locked": "2026-09-22"
+      },
+      {
+        "gameday": "2026-09-28",
+        "home": "CHI",
+        "away": "PHI",
+        "elo_home": 1534.0,
+        "elo_away": 1593.3,
+        "locked": "2026-09-22"
+      }
+    ],
+    "4": [
+      {
+        "gameday": "2026-10-04",
+        "home": "NYG",
+        "away": "ARI",
+        "elo_home": 1435.7,
+        "elo_away": 1408.7,
+        "locked": "2026-10-04"
+      },
+      {
+        "gameday": "2026-10-04",
+        "home": "HOU",
+        "away": "DAL",
+        "elo_home": 1538.4,
+        "elo_away": 1454.7,
+        "locked": "2026-10-04"
+      },
+      {
+        "gameday": "2026-10-04",
+        "home": "TB",
+        "away": "GB",
+        "elo_home": 1437.0,
+        "elo_away": 1482.7,
+        "locked": "2026-10-04"
+      },
+      {
+        "gameday": "2026-10-04",
+        "home": "CIN",
+        "away": "JAX",
+        "elo_home": 1519.7,
+        "elo_away": 1596.1,
+        "locked": "2026-10-04"
+      },
+      {
+        "gameday": "2026-10-04",
+        "home": "PHI",
+        "away": "LA",
+        "elo_home": 1562.0,
+        "elo_away": 1581.4,
+        "locked": "2026-10-04"
+      },
+      {
+        "gameday": "2026-10-04",
+        "home": "BUF",
+        "away": "NE",
+        "elo_home": 1659.0,
+        "elo_away": 1570.9,
+        "locked": "2026-10-04"
+      },
+      {
+        "gameday": "2026-10-04",
+        "home": "CHI",
+        "away": "NYJ",
+        "elo_home": 1565.2,
+        "elo_away": 1371.3,
+        "locked": "2026-10-04"
+      },
+      {
+        "gameday": "2026-10-04",
+        "home": "BAL",
+        "away": "TEN",
+        "elo_home": 1560.7,
+        "elo_away": 1305.1,
+        "locked": "2026-10-04"
+      },
+      {
+        "gameday": "2026-10-04",
+        "home": "MIN",
+        "away": "MIA",
+        "elo_home": 1613.6,
+        "elo_away": 1395.7,
+        "locked": "2026-10-04"
+      },
+      {
+        "gameday": "2026-10-04",
+        "home": "SF",
+        "away": "DEN",
+        "elo_home": 1613.8,
+        "elo_away": 1609.0,
+        "locked": "2026-10-04"
+      },
+      {
+        "gameday": "2026-10-04",
+        "home": "LV",
+        "away": "KC",
+        "elo_home": 1442.7,
+        "elo_away": 1570.6,
+        "locked": "2026-10-04"
+      },
+      {
+        "gameday": "2026-10-04",
+        "home": "SEA",
+        "away": "LAC",
+        "elo_home": 1681.2,
+        "elo_away": 1453.4,
+        "locked": "2026-10-04"
+      },
+      {
+        "gameday": "2026-10-04",
+        "home": "CAR",
+        "away": "DET",
+        "elo_home": 1430.6,
+        "elo_away": 1560.2,
+        "locked": "2026-10-04"
+      },
+      {
+        "gameday": "2026-10-05",
+        "home": "NO",
+        "away": "ATL",
+        "elo_home": 1434.2,
+        "elo_away": 1454.1,
+        "locked": "2026-10-04"
+      }
+    ],
+    "5": [
+      {
+        "gameday": "2026-10-08",
+        "home": "DAL",
+        "away": "TB",
+        "elo_home": 1475.4,
+        "elo_away": 1423.0,
+        "locked": "2026-10-06"
+      },
+      {
+        "gameday": "2026-10-11",
+        "home": "JAX",
+        "away": "PHI",
+        "elo_home": 1612.3,
+        "elo_away": 1544.8,
+        "locked": "2026-10-06"
+      },
+      {
+        "gameday": "2026-10-11",
+        "home": "GB",
+        "away": "CHI",
+        "elo_home": 1496.6,
+        "elo_away": 1574.2,
+        "locked": "2026-10-06"
+      },
+      {
+        "gameday": "2026-10-11",
+        "home": "MIA",
+        "away": "CIN",
+        "elo_home": 1390.0,
+        "elo_away": 1503.5,
+        "locked": "2026-10-06"
+      },
+      {
+        "gameday": "2026-10-11",
+        "home": "NYJ",
+        "away": "CLE",
+        "elo_home": 1362.4,
+        "elo_away": 1453.1,
+        "locked": "2026-10-06"
+      },
+      {
+        "gameday": "2026-10-11",
+        "home": "TEN",
+        "away": "HOU",
+        "elo_home": 1300.0,
+        "elo_away": 1517.7,
+        "locked": "2026-10-06"
+      },
+      {
+        "gameday": "2026-10-11",
+        "home": "PIT",
+        "away": "IND",
+        "elo_home": 1508.5,
+        "elo_away": 1476.7,
+        "locked": "2026-10-06"
+      },
+      {
+        "gameday": "2026-10-11",
+        "home": "NE",
+        "away": "LV",
+        "elo_home": 1588.8,
+        "elo_away": 1432.4,
+        "locked": "2026-10-06"
+      },
+      {
+        "gameday": "2026-10-11",
+        "home": "NO",
+        "away": "MIN",
+        "elo_home": 1401.2,
+        "elo_away": 1619.3,
+        "locked": "2026-10-06"
+      },
+      {
+        "gameday": "2026-10-11",
+        "home": "WAS",
+        "away": "NYG",
+        "elo_home": 1414.3,
+        "elo_away": 1455.2,
+        "locked": "2026-10-06"
+      },
+      {
+        "gameday": "2026-10-11",
+        "home": "LAC",
+        "away": "DEN",
+        "elo_home": 1447.1,
+        "elo_away": 1589.1,
+        "locked": "2026-10-06"
+      },
+      {
+        "gameday": "2026-10-11",
+        "home": "ARI",
+        "away": "DET",
+        "elo_home": 1389.2,
+        "elo_away": 1537.1,
+        "locked": "2026-10-06"
+      },
+      {
+        "gameday": "2026-10-11",
+        "home": "SEA",
+        "away": "SF",
+        "elo_home": 1687.5,
+        "elo_away": 1633.7,
+        "locked": "2026-10-06"
+      },
+      {
+        "gameday": "2026-10-11",
+        "home": "ATL",
+        "away": "BAL",
+        "elo_home": 1487.1,
+        "elo_away": 1565.7,
+        "locked": "2026-10-06"
+      },
+      {
+        "gameday": "2026-10-12",
+        "home": "LA",
+        "away": "BUF",
+        "elo_home": 1598.6,
+        "elo_away": 1641.0,
+        "locked": "2026-10-06"
+      }
+    ],
+    "6": [
+      {
+        "gameday": "2026-10-15",
+        "home": "DEN",
+        "away": "SEA",
+        "elo_home": 1602.8,
+        "elo_away": 1670.5,
+        "locked": "2026-10-13"
+      },
+      {
+        "gameday": "2026-10-18",
+        "home": "JAX",
+        "away": "HOU",
+        "elo_home": 1620.9,
+        "elo_away": 1533.8,
+        "locked": "2026-10-13"
+      },
+      {
+        "gameday": "2026-10-18",
+        "home": "CLE",
+        "away": "BAL",
+        "elo_home": 1433.4,
+        "elo_away": 1584.4,
+        "locked": "2026-10-13"
+      },
+      {
+        "gameday": "2026-10-18",
+        "home": "PHI",
+        "away": "CAR",
+        "elo_home": 1536.2,
+        "elo_away": 1453.7,
+        "locked": "2026-10-13"
+      },
+      {
+        "gameday": "2026-10-18",
+        "home": "ATL",
+        "away": "CHI",
+        "elo_home": 1468.4,
+        "elo_away": 1539.7,
+        "locked": "2026-10-13"
+      },
+      {
+        "gameday": "2026-10-18",
+        "home": "NYG",
+        "away": "NO",
+        "elo_home": 1455.3,
+        "elo_away": 1389.0,
+        "locked": "2026-10-13"
+      },
+      {
+        "gameday": "2026-10-18",
+        "home": "NE",
+        "away": "NYJ",
+        "elo_home": 1603.3,
+        "elo_away": 1382.2,
+        "locked": "2026-10-13"
+      },
+      {
+        "gameday": "2026-10-18",
+        "home": "TB",
+        "away": "PIT",
+        "elo_home": 1450.0,
+        "elo_away": 1527.6,
+        "locked": "2026-10-13"
+      },
+      {
+        "gameday": "2026-10-18",
+        "home": "IND",
+        "away": "TEN",
+        "elo_home": 1457.5,
+        "elo_away": 1283.9,
+        "locked": "2026-10-13"
+      },
+      {
+        "gameday": "2026-10-18",
+        "home": "LA",
+        "away": "ARI",
+        "elo_home": 1584.6,
+        "elo_away": 1367.0,
+        "locked": "2026-10-13"
+      },
+      {
+        "gameday": "2026-10-18",
+        "home": "LV",
+        "away": "BUF",
+        "elo_home": 1417.8,
+        "elo_away": 1655.1,
+        "locked": "2026-10-13"
+      },
+      {
+        "gameday": "2026-10-18",
+        "home": "KC",
+        "away": "LAC",
+        "elo_home": 1580.9,
+        "elo_away": 1433.4,
+        "locked": "2026-10-13"
+      },
+      {
+        "gameday": "2026-10-18",
+        "home": "GB",
+        "away": "DAL",
+        "elo_home": 1531.1,
+        "elo_away": 1448.5,
+        "locked": "2026-10-13"
+      },
+      {
+        "gameday": "2026-10-19",
+        "home": "SF",
+        "away": "WAS",
+        "elo_home": 1650.7,
+        "elo_away": 1414.1,
+        "locked": "2026-10-13"
+      }
+    ]
+  }
+}
