@@ -153,51 +153,7 @@ async function loadMLBLinks(){
  mlbGames.clear();
  events.forEach(e=>{const pk=matchMLBGame(e,mlbSchedules.get(new Date(e.date).getUTCFullYear())?.games||[]);if(pk)mlbGames.set(String(e.id),pk)});
 }
-// Verified FOX destinations; the optional scoreboard lookup discovers new links.
-const foxGameLinks=new Set(["https://www.foxsports.com/nfl/week-5-tampa-bay-buccaneers-vs-dallas-cowboys-oct-08-2026-game-boxscore-11061","https://www.foxsports.com/nfl/week-5-philadelphia-eagles-vs-jacksonville-jaguars-oct-11-2026-game-boxscore-11133","https://www.foxsports.com/nfl/week-5-cincinnati-bengals-vs-miami-dolphins-oct-11-2026-game-boxscore-11063","https://www.foxsports.com/nfl/week-5-minnesota-vikings-vs-new-orleans-saints-oct-11-2026-game-boxscore-11065","https://www.foxsports.com/nfl/week-5-new-york-giants-vs-washington-commanders-oct-11-2026-game-boxscore-11067","https://www.foxsports.com/nfl/week-5-chicago-bears-vs-green-bay-packers-oct-11-2026-game-boxscore-11070","https://www.foxsports.com/nfl/week-5-cleveland-browns-vs-new-york-jets-oct-11-2026-game-boxscore-11062","https://www.foxsports.com/nfl/week-5-las-vegas-raiders-vs-new-england-patriots-oct-11-2026-game-boxscore-11064","https://www.foxsports.com/nfl/week-5-houston-texans-vs-tennessee-titans-oct-11-2026-game-boxscore-11066","https://www.foxsports.com/nfl/week-5-indianapolis-colts-vs-pittsburgh-steelers-oct-11-2026-game-boxscore-11068","https://www.foxsports.com/nfl/week-5-denver-broncos-vs-los-angeles-chargers-oct-11-2026-game-boxscore-11069","https://www.foxsports.com/nfl/week-5-detroit-lions-vs-arizona-cardinals-oct-11-2026-game-boxscore-11071","https://www.foxsports.com/nfl/week-5-san-francisco-49ers-vs-seattle-seahawks-oct-11-2026-game-boxscore-11072","https://www.foxsports.com/nfl/week-5-baltimore-ravens-vs-atlanta-falcons-oct-11-2026-game-boxscore-11073","https://www.foxsports.com/nfl/week-5-buffalo-bills-vs-los-angeles-rams-oct-12-2026-game-boxscore-11074","https://www.foxsports.com/nfl/week-1-new-england-patriots-vs-seattle-seahawks-sep-09-2026-game-boxscore-11038","https://www.foxsports.com/nfl/week-2-pittsburgh-steelers-vs-new-england-patriots-sep-20-2026-game-boxscore-11054","https://www.foxsports.com/nfl/week-3-new-england-patriots-vs-jacksonville-jaguars-sep-27-2026-game-boxscore-11199","https://www.foxsports.com/nfl/week-4-new-england-patriots-vs-buffalo-bills-oct-04-2026-game-boxscore-11212","https://www.foxsports.com/nfl/week-16-new-england-patriots-vs-new-york-jets-dec-27-2026-game-boxscore-11122"]);
-const foxLoaded=new Map();
-["https://www.foxsports.com/college-football/iowa-hawkeyes-vs-washington-huskies-oct-09-2026-game-boxscore-43545","https://www.foxsports.com/college-football/iowa-state-cyclones-vs-byu-cougars-oct-09-2026-game-boxscore-43547","https://www.foxsports.com/college-football/houston-cougars-vs-kansas-state-wildcats-oct-10-2026-game-boxscore-43571","https://www.foxsports.com/college-football/texas-longhorns-vs-oklahoma-sooners-oct-10-2026-game-boxscore-44485","https://www.foxsports.com/college-football/georgia-bulldogs-vs-alabama-crimson-tide-oct-10-2026-game-boxscore-43597","https://www.foxsports.com/college-football/lsu-tigers-vs-kentucky-wildcats-oct-10-2026-game-boxscore-43574","https://www.foxsports.com/college-football/ucla-bruins-vs-oregon-ducks-oct-10-2026-game-boxscore-43587","https://www.foxsports.com/college-football/texas-am-aggies-vs-missouri-tigers-oct-10-2026-game-boxscore-43558","https://www.foxsports.com/college-football/tennessee-volunteers-vs-arkansas-razorbacks-oct-10-2026-game-boxscore-43602","https://www.foxsports.com/college-football/south-carolina-gamecocks-vs-florida-gators-oct-10-2026-game-boxscore-43566","https://www.foxsports.com/college-football/ucf-knights-vs-oklahoma-state-cowboys-oct-10-2026-game-boxscore-43564","https://www.foxsports.com/college-football/usc-trojans-vs-penn-state-nittany-lions-oct-10-2026-game-boxscore-43585","https://www.foxsports.com/college-football/boise-state-broncos-vs-fresno-state-bulldogs-oct-10-2026-game-boxscore-43642","https://www.foxsports.com/college-football/illinois-fighting-illini-vs-michigan-state-spartans-oct-10-2026-game-boxscore-43572","https://www.foxsports.com/college-football/western-michigan-broncos-vs-michigan-wolverines-sep-05-2026-game-boxscore-43016","https://www.foxsports.com/college-football/oklahoma-sooners-vs-michigan-wolverines-sep-12-2026-game-boxscore-43065","https://www.foxsports.com/college-football/utep-miners-vs-michigan-wolverines-sep-19-2026-game-boxscore-43222","https://www.foxsports.com/college-football/iowa-hawkeyes-vs-michigan-wolverines-sep-26-2026-game-boxscore-43345","https://www.foxsports.com/college-football/michigan-wolverines-vs-minnesota-golden-gophers-oct-03-2026-game-boxscore-43477","https://www.foxsports.com/college-football/penn-state-nittany-lions-vs-michigan-wolverines-oct-17-2026-game-boxscore-43682","https://www.foxsports.com/college-football/indiana-hoosiers-vs-michigan-wolverines-oct-24-2026-game-boxscore-43797","https://www.foxsports.com/college-football/michigan-wolverines-vs-rutgers-scarlet-knights-oct-31-2026-game-boxscore-43924","https://www.foxsports.com/college-football/michigan-state-spartans-vs-michigan-wolverines-nov-07-2026-game-boxscore-44021","https://www.foxsports.com/college-football/michigan-wolverines-vs-oregon-ducks-nov-14-2026-game-boxscore-44136","https://www.foxsports.com/college-football/ucla-bruins-vs-michigan-wolverines-nov-21-2026-game-boxscore-44271","https://www.foxsports.com/college-football/michigan-wolverines-vs-ohio-state-buckeyes-nov-28-2026-game-boxscore-44384"].forEach(url=>foxGameLinks.add(url));
-function foxGameURL(e,path='football/nfl'){
- const league=path==='football/nfl'?'nfl':path==='football/college-football'?'college-football':null;
- if(!league)return null;
- const competitors=comp(e)?.competitors||[];
- const slug=name=>String(name||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
- const away=slug(competitors.find(c=>c.homeAway==='away')?.team?.displayName);
- const home=slug(competitors.find(c=>c.homeAway==='home')?.team?.displayName);
- if(!away||!home)return null;
- const day=mlbDate(e),months=['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
- const matches=[...foxGameLinks].filter(url=>{
-  if(!url.startsWith('https://www.foxsports.com/'+league+'/'))return false;
-  const m=/^https:\/\/www\.foxsports\.com\/nfl\/(.+)-vs-(.+)-([a-z]{3})-(\d{1,2})-(\d{4})-game-boxscore-\d+$/.exec(url.replace('/college-football/','/nfl/'));
-  if(!m||!(m[1]===away||m[1].endsWith('-'+away))||m[2]!==home)return false;
-  const month=months.indexOf(m[3])+1;
-  return month>0&&`${m[5]}-${String(month).padStart(2,'0')}-${m[4].padStart(2,'0')}`===day;
- });
- return matches.length===1?matches[0]:null;
-}
-function addFOXLinks(html){
- const links=String(html).match(/(?:https:\/\/www\.foxsports\.com)?\/(?:nfl|college-football)\/[a-z0-9-]+game-boxscore-\d+/g)||[];
- links.forEach(url=>foxGameLinks.add(url.startsWith('/')?'https://www.foxsports.com'+url:url));
-}
-async function loadFOXLinks(){
- await Promise.allSettled(['nfl','college-football'].map(async league=>{
-  const loaded=foxLoaded.get(league);
-  if(loaded&&Date.now()-loaded<3600000)return;
-  const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),15000);
-  try{
-   const response=await fetch(`https://www.foxsports.com/${league}/scores`,{signal:controller.signal});
-   if(!response.ok)throw Error(response.status);
-   addFOXLinks(await response.text());foxLoaded.set(league,Date.now());
-  }catch{/* Missing or blocked FOX data keeps the ESPN game link. */}
-  finally{clearTimeout(timeout)}
- }));
-}
 function gameLink(e,label,path){
- if(['football/nfl','football/college-football'].includes(path)){
-  const url=foxGameURL(e,path);
-  if(url)return `<a data-game="${esc(e.id)}" href="${url}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`;
- }
-
  if(path==='baseball/mlb'){
   const pk=mlbGames.get(String(e.id));
   const day=mlbDate(e);
@@ -484,7 +440,7 @@ async function load(){
   const results=await Promise.allSettled([loadLeagues(),...teams.map(loadTeam)]);
   if(results.some(r=>r.status==='rejected'))throw Error('Unable to render scores');
   syncTeamScores();
-  await Promise.allSettled([loadMLBLinks(),loadNFLElo(),loadFOXLinks(),loadUpcomingRecords()]);
+  await Promise.allSettled([loadMLBLinks(),loadNFLElo(),loadUpcomingRecords()]);
   renderLeagues();
   render();
   updateEloDate();

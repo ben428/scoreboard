@@ -6,7 +6,7 @@ A static personal sports scoreboard. Open `index.html` through a web server; `ap
 
 Publish this repository using **Settings → Pages → GitHub Actions**. GitHub Pages will serve the root `index.html` and `app.js` over HTTPS.
 
-The scoreboard refreshes every 60 seconds while the page is active. NFL Elo rankings include a verified dated fallback, and the page loads a same-origin ratings snapshot refreshed from NFL Analytics by GitHub Actions. FOX game links use verified destinations with ESPN as a fallback. Browser cross-origin restrictions may prevent new FOX links  from being fetched; bundled data only covers its recorded games. Baseball links use MLB Gameday when matched, otherwise MLB's dated scoreboard.
+The scoreboard refreshes every 60 seconds while the page is active. NFL Elo rankings include a verified dated fallback, and the page loads a same-origin ratings snapshot refreshed from NFL Analytics by GitHub Actions. Football and basketball game links use ESPN. Baseball links use MLB Gameday when matched, otherwise MLB's dated scoreboard.
 
 After publishing, check scores, game links, and refresh in Safari on the iPod Touch running iOS 15.
 
