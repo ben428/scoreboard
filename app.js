@@ -328,9 +328,16 @@ const leagues=[
  {name:'NCAAF Big Ten',path:'football/college-football',group:'5',standings:'https://www.espn.com/college-football/standings/_/group/5'}
 ];
 let leagueData=[],selectedLeague=-1;
+function leagueHidden(i){
+ const d=leagueData[i];
+ if(leagues[i]?.path!=='baseball/mlb'||!d||d.error||d.partial||d.stale)return false;
+ const days=Object.values(d.dailyFeeds||{});
+ return days.length===2&&days.every(day=>Array.isArray(day?.events)&&day.events.length===0)&&Array.isArray(d.events)&&d.events.length===0;
+}
 function leagueFilters(){
- const labels=['All leagues',...leagues.map(l=>l.name)];
- document.querySelector('#league-filters').innerHTML=labels.map((label,i)=>`<button type="button" class="${selectedLeague===i-1?'active':''}" data-league="${i-1}" aria-pressed="${selectedLeague===i-1}">${esc(label)}</button>`).join('');
+ if(selectedLeague!==-1&&leagueHidden(selectedLeague))selectedLeague=-1;
+ const labels=[{label:'All leagues',index:-1},...leagues.map((l,index)=>({label:l.name,index})).filter(item=>!leagueHidden(item.index))];
+ document.querySelector('#league-filters').innerHTML=labels.map(({label,index})=>`<button type="button" class="${selectedLeague===index?'active':''}" data-league="${index}" aria-pressed="${selectedLeague===index}">${esc(label)}</button>`).join('');
  document.querySelectorAll('#league-filters [data-league]').forEach(button=>button.onclick=()=>{
   selectedLeague=Number(button.dataset.league);
   leagueFilters();renderLeagues();
@@ -374,8 +381,9 @@ function competitorRank(c,l){
  return Number.isInteger(n)&&n>=1&&n<=25?`<small class="rank">${n}</small>`:'';
 }
 function renderLeagues(){
+ leagueFilters();
  document.querySelector('#league-scores').innerHTML=leagues.map((l,i)=>{
-  if(selectedLeague!==-1&&selectedLeague!==i)return '';
+  if(leagueHidden(i)||(selectedLeague!==-1&&selectedLeague!==i))return '';
   const d=leagueData[i];
   const events=(d?.events||[]).filter(e=>!l.ranked||(comp(e)?.competitors||[]).some(c=>c.curatedRank?.current>=1&&c.curatedRank.current<=25)).sort((a,b)=>{
    if(l.name==='MLB')return chronological(a,b);
