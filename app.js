@@ -36,12 +36,12 @@ function isLive(e){return state(e)==='in'&&!condition(e)}
 function isFinal(e){return state(e)==='post'&&!condition(e)&&statusType(e).completed!==false}
 function isResult(e){return isFinal(e)||isCanceled(e)}
 function upsetLabel(e,path){
- if(!['football/college-football','football/nfl'].includes(path)||(!isFinal(e)&&!isLive(e)))return '';
+ if(!['football/college-football','football/nfl','basketball/mens-college-basketball'].includes(path)||(!isFinal(e)&&!isLive(e)))return '';
  if(isLive(e)){
   const type=statusType(e);
   const halftime=[type.name,type.description,type.detail,type.shortDetail].some(value=>/\bhalf[ _-]?time\b/i.test(String(value||'').replace(/_/g,' ')));
   const period=Number(comp(e)?.status?.period??e?.status?.period);
-  if(!halftime&&(!Number.isFinite(period)||period<3))return '';
+  if(!halftime&&(!Number.isFinite(period)||period<(path==='basketball/mens-college-basketball'?2:3)))return '';
  }
  // Team schedules can omit rankings; use the matching college scoreboard event.
  const rankedEvent=leagueData.filter((d,i)=>leagues[i].path===path).flatMap(d=>d?.events||[]).find(other=>String(other.id)===String(e.id));
@@ -56,9 +56,9 @@ function upsetLabel(e,path){
  });
  if(ranks.some(n=>!Number.isFinite(n))||ranks[0]===ranks[1])return '';
  const underdog=(path==='football/nfl'?ranks[0]<ranks[1]:ranks[0]>ranks[1])?0:1,favorite=1-underdog;
- if(path==='football/college-football'&&ranks[favorite]>25)return '';
+ if(path!=='football/nfl'&&ranks[favorite]>25)return '';
  const margin=points[underdog]-points[favorite];
- if(isLive(e))return margin>=-7?'<span class="upset upset-watch">Upset watch</span>':'';
+ if(isLive(e))return margin>=(path==='basketball/mens-college-basketball'?-9:-7)?'<span class="upset upset-watch">Upset watch</span>':'';
  return margin>0?'<span class="upset">Upset</span>':'';
 }
 
@@ -325,12 +325,18 @@ const leagues=[
  {name:'MLB',path:'baseball/mlb',standings:'https://www.mlb.com/standings'},
  {name:'NFL',path:'football/nfl',standings:'https://www.espn.com/nfl/standings'},
  {name:'NCAAF Top 25',path:'football/college-football',ranked:true,standings:'https://www.espn.com/college-football/standings'},
- {name:'NCAAF Big Ten',path:'football/college-football',group:'5',standings:'https://www.espn.com/college-football/standings/_/group/5'}
+ {name:'NCAAF Big Ten',path:'football/college-football',group:'5',standings:'https://www.espn.com/college-football/standings/_/group/5'},
+ {name:'NCAAM Top 25',path:'basketball/mens-college-basketball',ranked:true,rankedGroup:'50',windowDays:4,standings:'https://www.espn.com/mens-college-basketball/standings'}
 ];
 let leagueData=[],selectedLeague=-1;
+function leagueEvents(i){
+ const l=leagues[i];
+ return (leagueData[i]?.events||[]).filter(e=>!l.ranked||(comp(e)?.competitors||[]).some(c=>c.curatedRank?.current>=1&&c.curatedRank.current<=25));
+}
 function leagueHidden(i){
  const d=leagueData[i];
- if(leagues[i]?.path!=='baseball/mlb'||!d||d.error||d.partial||d.stale)return false;
+ if(!d||d.error||d.partial||d.stale||!Array.isArray(d.events))return false;
+ if(leagues[i]?.path!=='baseball/mlb')return leagueEvents(i).length===0;
  const days=Object.values(d.dailyFeeds||{});
  return days.length===2&&days.every(day=>Array.isArray(day?.events)&&day.events.length===0)&&Array.isArray(d.events)&&d.events.length===0;
 }
@@ -376,7 +382,7 @@ async function loadUpcomingRecords(){
  }));
 }
 function competitorRank(c,l){
- if(!l.path.includes('college-football'))return '';
+ if(!l.path.includes('college-football')&&l.path!=='basketball/mens-college-basketball')return '';
  const n=Number(c.curatedRank?.current);
  return Number.isInteger(n)&&n>=1&&n<=25?`<small class="rank">${n}</small>`:'';
 }
@@ -385,7 +391,7 @@ function renderLeagues(){
  document.querySelector('#league-scores').innerHTML=leagues.map((l,i)=>{
   if(leagueHidden(i)||(selectedLeague!==-1&&selectedLeague!==i))return '';
   const d=leagueData[i];
-  const events=(d?.events||[]).filter(e=>!l.ranked||(comp(e)?.competitors||[]).some(c=>c.curatedRank?.current>=1&&c.curatedRank.current<=25)).sort((a,b)=>{
+  const events=leagueEvents(i).sort((a,b)=>{
    if(l.name==='MLB')return chronological(a,b);
    const order={in:0,pre:1,post:2};
    return (order[state(a)]??3)-(order[state(b)]??3)||chronological(a,b);
@@ -400,9 +406,23 @@ async function loadLeagues(){
   const previous=leagueData[i];
   try{
    let url=`https://site.api.espn.com/apis/site/v2/sports/${l.path}/scoreboard?limit=200`;
-   if(l.ranked)url+='&groups=80';
+   if(l.ranked)url+='&groups='+encodeURIComponent(l.rankedGroup||'80');
    if(l.group)url+='&groups='+encodeURIComponent(l.group);
-   if(l.name==='MLB'){
+   if(l.windowDays){
+    const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+    const part=k=>parts.find(p=>p.type===k).value;
+    const today=new Date(Date.UTC(Number(part('year')),Number(part('month'))-1,Number(part('day'))));
+    const dates=[];
+    for(let offset=-1;offset<=l.windowDays;offset++){const day=new Date(today);day.setUTCDate(day.getUTCDate()+offset);dates.push(day.toISOString().slice(0,10).replace(/-/g,''))}
+    const results=await Promise.allSettled(dates.map(d=>fetchJSON(url+'&dates='+d)));
+    const dailyFeeds={};
+    results.forEach((r,j)=>{
+     if(r.status==='fulfilled')dailyFeeds[dates[j]]=r.value;
+     else if(previous?.dailyFeeds?.[dates[j]])dailyFeeds[dates[j]]=previous.dailyFeeds[dates[j]];
+    });
+    if(!Object.keys(dailyFeeds).length)throw Error('Feed unavailable');
+    leagueData[i]={events:mergeEvents(Object.values(dailyFeeds)),dailyFeeds,partial:results.some(r=>r.status==='rejected')};
+   }else if(l.name==='MLB'){
     const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
     const part=k=>parts.find(p=>p.type===k).value;
     // Subtract a calendar day, rather than 24 hours, to handle daylight saving changes.
