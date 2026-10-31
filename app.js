@@ -323,9 +323,8 @@ function render(){
 
 const leagues=[
  {name:'MLB',path:'baseball/mlb',standings:'https://www.mlb.com/standings'},
- {name:'NFL',path:'football/nfl',standings:'https://www.espn.com/nfl/standings'},
  {name:'NCAAF Top 25',path:'football/college-football',ranked:true,standings:'https://www.espn.com/college-football/standings'},
- {name:'NCAAF Big Ten',path:'football/college-football',group:'5',standings:'https://www.espn.com/college-football/standings/_/group/5'},
+ {name:'NFL',path:'football/nfl',standings:'https://www.espn.com/nfl/standings'},
  {name:'NCAAM Top 25',path:'basketball/mens-college-basketball',ranked:true,rankedGroup:'50',windowDays:4,standings:'https://www.espn.com/mens-college-basketball/standings'}
 ];
 let leagueData=[],selectedLeague=-1;
