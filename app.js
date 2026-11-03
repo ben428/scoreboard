@@ -1,3 +1,5 @@
+let noSpoilers=typeof location!=='undefined'&&/(?:^|[?&])spoilers=off(?:&|$)/i.test(location.search);
+if(noSpoilers){document.documentElement?.classList?.add('no-spoilers');document.querySelector('#view-mode').textContent='No Spoilers Mode'}
 // Compatible with Safari on iOS 15; avoid newer timeout and array APIs.
 function lastItem(items){return items[items.length-1]}
 async function fetchJSON(url){const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),15000);try{const response=await fetch(url,{signal:controller.signal});if(!response.ok)throw Error(response.status);return await response.json()}finally{clearTimeout(timeout)}}
@@ -36,6 +38,7 @@ function isLive(e){return state(e)==='in'&&!condition(e)}
 function isFinal(e){return state(e)==='post'&&!condition(e)&&statusType(e).completed!==false}
 function isResult(e){return isFinal(e)||isCanceled(e)}
 function upsetLabel(e,path){
+ if(noSpoilers)return '';
  if(!['football/college-football','football/nfl','basketball/mens-college-basketball'].includes(path)||(!isFinal(e)&&!isLive(e)))return '';
  if(isLive(e)){
   const type=statusType(e);
@@ -107,6 +110,7 @@ function nflEloRank(e,c){
 }
 function updateEloDate(){const node=document.querySelector('#elo-updated');if(node)node.textContent=' · ratings updated '+(nflElo?.updated||'unavailable')}
 function eloLabel(e,c,path){
+ if(noSpoilers)return '';
  if(path!=='football/nfl')return '';
  const rank=nflEloRank(e,c);
  return rank==null?'':`<small class="rank" aria-label="Elo ranking ${rank}">${rank}</small>`;
@@ -117,7 +121,7 @@ function chronological(a,b){const x=eventTime(a),y=eventTime(b);return (Number.i
 function isUpcoming(e,now=Date.now()){return state(e)==='pre'&&!condition(e)&&eventTime(e)>=now}
 function gameTime(e){return comp(e)?.dateValid===false||/TBD|TBA/i.test(status(e))?'Time TBD':time(e.date)}
 function score(c){return c.score?.displayValue??c.score?.value??c.score??'–'}
-function gameScore(e,c){return state(e)==='pre'||isCanceled(e)?'–':esc(score(c))}
+function gameScore(e,c){if(noSpoilers)return '';return state(e)==='pre'||isCanceled(e)?'–':esc(score(c))}
 function matchupPrefix(e,t){return comp(e)?.competitors?.find(c=>String(c.team?.id)===t.id)?.homeAway==='away'?'at':'vs'}
 function opponentLink(e,t){const opponent=comp(e)?.competitors?.find(c=>String(c.team?.id)!==t.id)?.team;return teamLink(opponent?.displayName||'Opponent TBD',t.path,opponent?.id)}
 function opponents(e,t){return comp(e)?.competitors?.find(c=>String(c.team?.id)!==t.id)?.team?.displayName||'Opponent TBD'}
@@ -187,7 +191,7 @@ function highlightsLink(e,path,events=[]){
   }
  }
  const query=names.join(' vs ')+ ' '+(sports[path]||path)+' '+fullDate+gameNumber+' highlights';
- return `<a href="https://www.youtube.com/results?search_query=${esc(encodeURIComponent(query))}" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 16 16" style="vertical-align:-2px;margin-right:4px" fill="none"><rect x="1" y="2.5" width="14" height="11" rx="2" stroke="currentColor"/><path d="M6 5v6l5-3z" fill="currentColor"/></svg>Find highlights</a>`;
+ return `<a class="highlights-link" href="https://www.youtube.com/results?search_query=${esc(encodeURIComponent(query))}" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 16 16" style="vertical-align:-2px;margin-right:4px" fill="none"><rect x="1" y="2.5" width="14" height="11" rx="2" stroke="currentColor"/><path d="M6 5v6l5-3z" fill="currentColor"/></svg>Find highlights</a>`;
 }
 function gameFooter(e,path,events=[]){
  const highlights=highlightsLink(e,path,events),badge=upsetLabel(e,path);
@@ -213,6 +217,7 @@ function broadcastNetworks(e){
 function broadcastSuffix(e){const networks=broadcastNetworks(e);return networks?' · '+networks:''}
 function gameDateTime(e,path){return gameLink(e,date(e.date)+(state(e)==='pre'&&!condition(e)?' · '+gameTime(e):'')+broadcastSuffix(e),path)}
 function gameHeading(e,path,livePrefix=''){
+ if(noSpoilers)return esc(date(e.date));
  const detail=state(e)==='pre'&&!condition(e)?'':status(e).replace(/\s*\b(?:ET|EST|EDT|CT|CST|CDT|MT|MST|MDT|PT|PST|PDT|UTC|GMT)\b/g,'').trim();
  if(isLive(e))return gameLink(e,livePrefix+date(e.date)+(detail?' · '+detail:'')+broadcastSuffix(e),path);
  if(isResult(e)||condition(e))return gameLink(e,date(e.date)+(detail?' · '+detail:'')+broadcastSuffix(e),path);
@@ -233,7 +238,7 @@ function scheduleRow({e,t}){
 function pastResultRow({e,t,events}){
  const competitors=(comp(e)?.competitors||[]).slice().sort((a,b)=>(a.homeAway==='home')-(b.homeAway==='home'));
  const highlights=highlightsLink(e,t.path,events);
- return `<div class="past-result"><div class="past-meta"><strong>${teamLink(t.short,t.path,t.id)}</strong><span>${gameHeading(e,t.path)}</span>${highlights?`<span>${highlights}</span>`:''}</div><div class="past-matchup">${competitors.map(c=>`<div class="past-score-row"><span>${eloLabel(e,c,t.path)}${teamLink(c.team?.shortDisplayName||c.team?.displayName,t.path,c.team?.id)}</span><strong>${gameScore(e,c)}</strong></div>`).join('')}</div></div>`;
+ return `<div class="past-result"><div class="past-meta"><strong>${teamLink(t.short,t.path,t.id)}</strong><span>${gameHeading(e,t.path)}</span>${highlights?`<span>${highlights}</span>`:''}</div><div class="past-matchup">${competitors.map(c=>`<div class="past-score-row"><span>${eloLabel(e,c,t.path)}${teamLink(c.team?.shortDisplayName||c.team?.displayName,t.path,c.team?.id)}</span>${noSpoilers?'':`<strong>${gameScore(e,c)}</strong>`}</div>`).join('')}</div></div>`;
 }
 function feedNotice(d){return d?.partial||d?.stale?'<p class="details" role="status">Some scores may be out of date. Retrying automatically.</p>':''}
 function render(){
@@ -248,9 +253,9 @@ function render(){
   const results=events.filter(isResult);
   const latest=lastItem(results.filter(e=>eventTime(e)<=now));
   const latestFinal=lastItem(events.filter(e=>isFinal(e)&&eventTime(e)<=now));
-  const next=events.find(e=>isUpcoming(e,now));
+  const next=noSpoilers?null:events.find(e=>isUpcoming(e,now));
   events.filter(e=>isUpcoming(e,now)||(isUnresolved(e)&&relevant(e,now))).forEach(e=>upcoming.push({e,t}));
-  const olderResult=lastItem(events.filter(e=>(isResult(e)||isUnresolved(e))&&eventTime(e)<=now&&!relevant(e,now)));
+  const olderResult=lastItem(events.filter(e=>(noSpoilers?(isFinal(e)||isLive(e)):(isResult(e)||isUnresolved(e)))&&eventTime(e)<=now&&!relevant(e,now)));
   if(olderResult)older.push({e:olderResult,t,events});
   const sameSeason=(a,b)=>{
    if(!a||!b)return false;
@@ -261,19 +266,21 @@ function render(){
   };
   const daysUntilNext=next?(eventTime(next)-now)/86400000:Infinity;
   const nextWithinSeasonWindow=next&&(daysUntilNext<=7||(daysUntilNext<=35&&sameSeason(latestFinal,next)));
-  const game=live||pending||(latest&&relevant(latest,now)?latest:null)||(nextWithinSeasonWindow?next:null);
+  const recent=noSpoilers?latestFinal:latest;
+  const game=live||(!noSpoilers&&pending)||(recent&&relevant(recent,now)?recent:null)||(nextWithinSeasonWindow?next:null);
   if(d&&!d.error&&!game)return '';
-  const inside=d?.error?'<p>Scores are temporarily unavailable. Try refreshing.</p>':!d?'<p>Loading scores…</p>':!game?'<p>No games available in the current schedule.</p>':`<div class="label ${live?'live':''}">${gameHeading(game,t.path,'● LIVE · ')}</div>${(comp(game)?.competitors||[]).slice().sort((a,b)=>(a.homeAway==='home')-(b.homeAway==='home')).map(c=>`<div class="row"><span>${c.team?.logo?`<img src="${esc(c.team.logo)}" alt="" onerror="this.style.display='none'">`:''}${eloLabel(game,c,t.path)}${teamLink(c.team?.shortDisplayName||c.team?.displayName,t.path,c.team?.id)}${cardRecord(game,c,t.path)?` <small class="teamrecord">(${esc(cardRecord(game,c,t.path))})</small>`:''}</span><span class="score">${gameScore(game,c)}</span></div>`).join('')}<div class="details">${esc(comp(game)?.venue?.fullName||'')}</div>${gameFooter(game,t.path,events)}`;
+  const inside=d?.error?'<p>Scores are temporarily unavailable. Try refreshing.</p>':!d?'<p>Loading scores…</p>':!game?'<p>No games available in the current schedule.</p>':`<div class="label ${live&&!noSpoilers?'live':''}">${gameHeading(game,t.path,'● LIVE · ')}</div>${(comp(game)?.competitors||[]).slice().sort((a,b)=>(a.homeAway==='home')-(b.homeAway==='home')).map(c=>`<div class="row"><span>${c.team?.logo?`<img src="${esc(c.team.logo)}" alt="" onerror="this.style.display='none'">`:''}${eloLabel(game,c,t.path)}${teamLink(c.team?.shortDisplayName||c.team?.displayName,t.path,c.team?.id)}${cardRecord(game,c,t.path)?` <small class="teamrecord">(${esc(cardRecord(game,c,t.path))})</small>`:''}</span>${noSpoilers?'':`<span class="score">${gameScore(game,c)}</span>`}</div>`).join('')}<div class="details">${esc(comp(game)?.venue?.fullName||'')}</div>${gameFooter(game,t.path,events)}`;
   return `<article class="card" style="--accent:${t.color}"><div class="cardhead"><span class="team-icon"><img src="https://a.espncdn.com/i/teamlogos/${t.path.includes('college')?'ncaa':t.path.split('/')[1]}/500/${t.id}.png" alt="${esc(t.name)} logo" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span class="monogram" hidden>${t.mark}</span></span><div><div class="teamname">${teamLink(t.short,t.path,t.id)}</div><div class="league">${t.league}</div></div></div><div class="game">${inside}${feedNotice(d)}</div>${nextWithinSeasonWindow&&next.id!==game?.id?`<div class="next"><b>NEXT GAME</b>${gameDateTime(next,t.path)}<br>${matchupPrefix(next,t)} ${opponentLink(next,t)}</div>`:''}</article>`;
  }).join('');
  upcoming.sort((a,b)=>chronological(a.e,b.e));
  const seenLater=new Set();
  for(const item of upcoming.filter(({e})=>!relevant(e,now))){if(!seenLater.has(item.t)){seenLater.add(item.t);later.push(item)}}
- if(!document.querySelector('#cards').innerHTML)document.querySelector('#cards').innerHTML='<div class="empty">No live games, recent results, or games in the next seven days. Your other games are below.</div>';
+ if(!document.querySelector('#cards').innerHTML)document.querySelector('#cards').innerHTML=`<div class="empty">${noSpoilers?'No recent games. Your older games are below.':'No live games, recent results, or games in the next seven days. Your other games are below.'}</div>`;
  older.sort((a,b)=>chronological(b.e,a.e));
  later.sort((a,b)=>chronological(a.e,b.e));
  document.querySelector('#past-games').innerHTML=older.map(pastResultRow).join('')||'<div class="empty">No older results available.</div>';
- document.querySelector('#future-games').innerHTML=later.map(scheduleRow).join('')||'<div class="empty">No later games available.</div>';
+ document.querySelector('#future-section').hidden=noSpoilers;
+ document.querySelector('#future-games').innerHTML=noSpoilers?'':later.map(scheduleRow).join('')||'<div class="empty">No later games available.</div>';
 }
 
 
@@ -286,7 +293,7 @@ const leagues=[
 let leagueData=[],selectedLeague=-1;
 function leagueEvents(i){
  const l=leagues[i];
- return (leagueData[i]?.events||[]).filter(e=>!l.ranked||(comp(e)?.competitors||[]).some(c=>c.curatedRank?.current>=1&&c.curatedRank.current<=25));
+ return (leagueData[i]?.events||[]).filter(e=>!noSpoilers||((isFinal(e)||isLive(e))&&eventTime(e)<=Date.now())).filter(e=>!l.ranked||(comp(e)?.competitors||[]).some(c=>c.curatedRank?.current>=1&&c.curatedRank.current<=25));
 }
 function leagueHidden(i){
  const d=leagueData[i];
@@ -306,6 +313,7 @@ function leagueFilters(){
 }
 // ESPN scoreboard competitors provide overall records and a national curated rank.
 function competitorRecord(c){
+ if(noSpoilers)return '';
  const records=Array.isArray(c.records)?c.records:Array.isArray(c.record)?c.record:[];
  const overall=records.find(r=>/^(overall|total)$/i.test(r.type||r.name||''))||records.find(r=>r.summary||r.displayValue)||null;
  const summary=overall?.summary||overall?.displayValue||(typeof c.record==='string'?c.record:'');
@@ -313,6 +321,7 @@ function competitorRecord(c){
 }
 const upcomingRecords=new Map();
 function cardRecord(e,c,path){
+ if(noSpoilers)return '';
  const supplied=competitorRecord(c);
  if(supplied||!isUpcoming(e))return supplied;
  return upcomingRecords.get(`${path}:${c.team?.id}:${e.season?.year}`)?.record||'';
@@ -337,6 +346,7 @@ async function loadUpcomingRecords(){
  }));
 }
 function competitorRank(c,l){
+ if(noSpoilers)return '';
  if(!l.path.includes('college-football')&&l.path!=='basketball/mens-college-basketball')return '';
  const n=Number(c.curatedRank?.current);
  return Number.isInteger(n)&&n>=1&&n<=25?`<small class="rank">${n}</small>`:'';
@@ -347,11 +357,12 @@ function renderLeagues(){
   if(leagueHidden(i)||(selectedLeague!==-1&&selectedLeague!==i))return '';
   const d=leagueData[i];
   const events=leagueEvents(i).sort((a,b)=>{
+   if(noSpoilers)return chronological(a,b);
    if(l.name==='MLB')return chronological(a,b);
    const order={in:0,pre:1,post:2};
    return (order[state(a)]??3)-(order[state(b)]??3)||chronological(a,b);
   });
-  return `<section class="leagueboard"><div class="leagueheading"><h2><a href="${esc(l.standings)}" target="_blank" rel="noopener noreferrer" title="View ${esc(l.name)} standings on ${l.path==='baseball/mlb'?'MLB.com':'ESPN'}">${esc(l.name)}</a></h2></div><div class="leaguegames">${d?.error?'<p class="empty">Scores temporarily unavailable. Try Refresh.</p>':!d?'<p class="empty">Loading scores…</p>':!events.length?'<p class="empty">No games in this scoreboard window.</p>':events.map(e=>`<article class="minigame"><div class="minimeta"><div class="ministatus ${isLive(e)?'live':''}">${gameHeading(e,l.path,'● ')}</div></div>${(comp(e)?.competitors||[]).slice().sort((a,b)=>(a.homeAway==='home')-(b.homeAway==='home')).map(c=>`<div class="minirow"><span>${competitorRank(c,l)}${eloLabel(e,c,l.path)}${teamLink(c.team?.shortDisplayName||c.team?.displayName,l.path,c.team?.id)}${competitorRecord(c)?` <small class="minirecord">(${esc(competitorRecord(c))})</small>`:''}</span><strong>${gameScore(e,c)}</strong></div>`).join('')}${gameFooter(e,l.path,d.events)}</article>`).join('')}${feedNotice(d)}</div></section>`;
+  return `<section class="leagueboard"><div class="leagueheading"><h2><a href="${esc(l.standings)}" target="_blank" rel="noopener noreferrer" title="View ${esc(l.name)} standings on ${l.path==='baseball/mlb'?'MLB.com':'ESPN'}">${esc(l.name)}</a></h2></div><div class="leaguegames">${d?.error?'<p class="empty">Scores temporarily unavailable. Try Refresh.</p>':!d?'<p class="empty">Loading scores…</p>':!events.length?'<p class="empty">No games in this scoreboard window.</p>':events.map(e=>`<article class="minigame"><div class="minimeta"><div class="ministatus ${isLive(e)&&!noSpoilers?'live':''}">${gameHeading(e,l.path,'● ')}</div></div>${(comp(e)?.competitors||[]).slice().sort((a,b)=>(a.homeAway==='home')-(b.homeAway==='home')).map(c=>`<div class="minirow"><span>${competitorRank(c,l)}${eloLabel(e,c,l.path)}${teamLink(c.team?.shortDisplayName||c.team?.displayName,l.path,c.team?.id)}${competitorRecord(c)?` <small class="minirecord">(${esc(competitorRecord(c))})</small>`:''}</span>${noSpoilers?'':`<strong>${gameScore(e,c)}</strong>`}</div>`).join('')}${gameFooter(e,l.path,d.events)}</article>`).join('')}${feedNotice(d)}</div></section>`;
  }).join('');
 }
 function mergeEvents(feeds){return [...new Map(feeds.flatMap(d=>d.events||[]).map(e=>[e.id,e])).values()]}
