@@ -46,9 +46,11 @@ def youtube(resource, key, **params):
         reason = 'unknown'
         try:
             details = json.loads(error.read()).get('error', {})
+            extended = [item.get('reason', '') for item in details.get('details', []) if isinstance(item, dict)]
             errors = details.get('errors', [])
             candidate = errors[0].get('reason', '') if errors else ''
-            if re.fullmatch(r'[A-Za-z0-9_.-]{1,80}', candidate): reason = candidate
+            reasons = [candidate] + extended
+            reason = ','.join(r for r in reasons if isinstance(r, str) and re.fullmatch(r'[A-Za-z0-9_.-]{1,80}', r)) or 'unknown'
         except Exception: pass
         raise RuntimeError('YouTube API HTTP ' + str(error.code) + ' (' + reason + ')') from None
     except Exception:
@@ -245,7 +247,7 @@ def update(path, key, now=None):
             for video in channel_videos(channel, key, now): videos[video['id']] = video
         except Exception as error:
             failed.add(channel['id'])
-            detail = str(error) if isinstance(error, RuntimeError) and re.fullmatch(r'YouTube API HTTP [0-9]{3} \([A-Za-z0-9_.-]+\)', str(error)) else 'request failed'
+            detail = str(error) if isinstance(error, RuntimeError) and re.fullmatch(r'YouTube API HTTP [0-9]{3} \([A-Za-z0-9_.,-]+\)', str(error)) else 'request failed'
             print('::warning::Highlights unavailable for approved channel ' + channel['name'] + ': ' + detail + '. Cached links retained.')
     if not videos: raise RuntimeError('No channel data available; retaining existing map')
     old = json.loads(path.read_text()) if path.exists() else {'schema': 1, 'games': {}}
@@ -283,7 +285,7 @@ def update(path, key, now=None):
 
 
 if __name__ == '__main__':
-    api_key = os.environ.get('YOUTUBE_API_KEY')
+    api_key = os.environ.get('YOUTUBE_API_KEY', '').strip()
     if not api_key:
         print('::warning::YOUTUBE_API_KEY is not configured; existing highlights retained.')
         sys.exit(0)
