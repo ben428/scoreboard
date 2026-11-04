@@ -376,13 +376,20 @@ function renderLeagues(){
  document.querySelector('#league-scores').innerHTML=leagues.map((l,i)=>{
   if(leagueHidden(i)||(selectedLeague!==-1&&selectedLeague!==i))return '';
   const d=leagueData[i];
-  const events=leagueEvents(i).sort((a,b)=>{
-   if(noSpoilers)return chronological(a,b);
-   if(l.name==='MLB')return chronological(a,b);
-   const order={in:0,pre:1,post:2};
-   return (order[state(a)]??3)-(order[state(b)]??3)||chronological(a,b);
-  });
-  return `<section class="leagueboard"><div class="leagueheading"><h2><a href="${esc(l.standings)}" target="_blank" rel="noopener noreferrer" title="View ${esc(l.name)} standings on ${l.path==='baseball/mlb'?'MLB.com':'ESPN'}">${esc(l.name)}</a></h2></div><div class="leaguegames">${d?.error?'<p class="empty">Scores temporarily unavailable. Try Refresh.</p>':!d?'<p class="empty">Loading scores…</p>':!events.length?'<p class="empty">No games in this scoreboard window.</p>':events.map(e=>`<article class="minigame"><div class="minimeta"><div class="ministatus ${isLive(e)&&!noSpoilers?'live':''}">${gameHeading(e,l.path,'● ')}</div></div>${(comp(e)?.competitors||[]).slice().sort((a,b)=>(a.homeAway==='home')-(b.homeAway==='home')).map(c=>`<div class="minirow"><span>${competitorRank(c,l)}${eloLabel(e,c,l.path)}${teamLink(c.team?.shortDisplayName||c.team?.displayName,l.path,c.team?.id)}${competitorRecord(c)?` <small class="minirecord">(${esc(competitorRecord(c))})</small>`:''}</span>${noSpoilers?'':`<strong>${gameScore(e,c)}</strong>`}</div>`).join('')}${gameFooter(e,l.path,d.events)}</article>`).join('')}${feedNotice(d)}</div></section>`;
+  const events=leagueEvents(i);
+  const cards=items=>items.map(e=>`<article class="minigame"><div class="minimeta"><div class="ministatus ${isLive(e)&&!noSpoilers?'live':''}">${gameHeading(e,l.path,'● ')}</div></div>${(comp(e)?.competitors||[]).slice().sort((a,b)=>(a.homeAway==='home')-(b.homeAway==='home')).map(c=>`<div class="minirow"><span>${competitorRank(c,l)}${eloLabel(e,c,l.path)}${teamLink(c.team?.shortDisplayName||c.team?.displayName,l.path,c.team?.id)}${competitorRecord(c)?` <small class="minirecord">(${esc(competitorRecord(c))})</small>`:''}</span>${noSpoilers?'':`<strong>${gameScore(e,c)}</strong>`}</div>`).join('')}${gameFooter(e,l.path,d.events)}</article>`).join('');
+  let contents='';
+  if(d?.error)contents='<p class="empty">Scores temporarily unavailable. Try Refresh.</p>';
+  else if(!d)contents='<p class="empty">Loading scores…</p>';
+  else if(!events.length)contents='<p class="empty">No games in this scoreboard window.</p>';
+  else if(noSpoilers)contents=`<div class="leaguegames">${cards(events.slice().sort(chronological))}</div>`;
+  else{
+   const current=events.filter(e=>!isFinal(e)).sort((a,b)=>Number(isLive(b))-Number(isLive(a))||chronological(a,b));
+   const completed=events.filter(isFinal).sort((a,b)=>Number.isFinite(eventTime(a))&&Number.isFinite(eventTime(b))?chronological(b,a):chronological(a,b));
+   if(current.length)contents+=`<div class="leaguegames">${cards(current)}</div>`;
+   if(completed.length)contents+=`<div class="league-completed"><h3 class="completed-heading">Completed games</h3><div class="leaguegames">${cards(completed)}</div></div>`;
+  }
+  return `<section class="leagueboard"><div class="leagueheading"><h2><a href="${esc(l.standings)}" target="_blank" rel="noopener noreferrer" title="View ${esc(l.name)} standings on ${l.path==='baseball/mlb'?'MLB.com':'ESPN'}">${esc(l.name)}</a></h2></div>${contents}${feedNotice(d)}</section>`;
  }).join('');
 }
 function mergeEvents(feeds){return [...new Map(feeds.flatMap(d=>d.events||[]).map(e=>[e.id,e])).values()]}
