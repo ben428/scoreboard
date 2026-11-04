@@ -255,15 +255,10 @@ function scheduleRow({e,t}){
  const detail=condition(e)|| (isFinal(e)?(comp(e)?.competitors||[]).map(c=>score(c)).join(' – ')+' · '+status(e):gameTime(e));
  return `<div class="scheduleitem"><div>${gameLink(e,date(e.date),t.path)}</div><div><strong>${teamLink(t.short,t.path,t.id)}</strong><br><small>${matchupPrefix(e,t)} ${opponentLink(e,t)}</small></div><small class="sport">${t.league}</small><div>${gameLink(e,detail+broadcastSuffix(e),t.path)}</div></div>`;
 }
-function pastResultRow({e,t,events}){
- const competitors=(comp(e)?.competitors||[]).slice().sort((a,b)=>(a.homeAway==='home')-(b.homeAway==='home'));
- const highlights=highlightsLink(e,t.path,events);
- return `<div class="past-result"><div class="past-meta"><strong>${teamLink(t.short,t.path,t.id)}</strong><span>${gameHeading(e,t.path)}</span>${highlights?`<span>${highlights}</span>`:''}</div><div class="past-matchup">${competitors.map(c=>`<div class="past-score-row"><span>${eloLabel(e,c,t.path)}${teamLink(c.team?.shortDisplayName||c.team?.displayName,t.path,c.team?.id)}</span>${noSpoilers?'':`<strong>${gameScore(e,c)}</strong>`}</div>`).join('')}</div></div>`;
-}
 function feedNotice(d){return d?.partial||d?.stale?'<p class="details" role="status">Some scores may be out of date. Retrying automatically.</p>':''}
 function render(){
  const now=Date.now();
- let upcoming=[],older=[],later=[];
+ let upcoming=[],later=[];
  document.querySelector('#cards').innerHTML=teams.map((t,i)=>{
   if(selected!==-1&&selected!==i)return '';
   const d=data[i];
@@ -275,8 +270,6 @@ function render(){
   const latestFinal=lastItem(events.filter(e=>isFinal(e)&&eventTime(e)<=now));
   const next=noSpoilers?null:events.find(e=>isUpcoming(e,now));
   events.filter(e=>isUpcoming(e,now)||(isUnresolved(e)&&relevant(e,now))).forEach(e=>upcoming.push({e,t}));
-  const olderResult=lastItem(events.filter(e=>(noSpoilers?(isFinal(e)||isLive(e)):(isResult(e)||isUnresolved(e)))&&eventTime(e)<=now&&!relevant(e,now)));
-  if(olderResult)older.push({e:olderResult,t,events});
   const sameSeason=(a,b)=>{
    if(!a||!b)return false;
    const ay=a.season?.year,by=b.season?.year;
@@ -295,10 +288,8 @@ function render(){
  upcoming.sort((a,b)=>chronological(a.e,b.e));
  const seenLater=new Set();
  for(const item of upcoming.filter(({e})=>!relevant(e,now))){if(!seenLater.has(item.t)){seenLater.add(item.t);later.push(item)}}
- if(!document.querySelector('#cards').innerHTML)document.querySelector('#cards').innerHTML=`<div class="empty">${noSpoilers?'No recent games. Your older games are below.':'No live games, recent results, or games in the next seven days. Your other games are below.'}</div>`;
- older.sort((a,b)=>chronological(b.e,a.e));
+ if(!document.querySelector('#cards').innerHTML)document.querySelector('#cards').innerHTML=`<div class="empty">${noSpoilers?'No recent games.':'No live games, recent results, or games in the next seven days.'}</div>`;
  later.sort((a,b)=>chronological(a.e,b.e));
- document.querySelector('#past-games').innerHTML=older.map(pastResultRow).join('')||'<div class="empty">No older results available.</div>';
  document.querySelector('#future-section').hidden=noSpoilers;
  document.querySelector('#future-games').innerHTML=noSpoilers?'':later.map(scheduleRow).join('')||'<div class="empty">No later games available.</div>';
 }
