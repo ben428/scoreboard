@@ -25,3 +25,28 @@ The Pages workflow runs at 10:17 and 22:17 UTC daily, on pushes to main, and thr
 ## No spoilers
 
 Open `https://ben428.github.io/scoreboard/?spoilers=off` to hide scores, progress/final/overtime status, ranks, records, and upset labels. Upcoming games and next-game previews are omitted. Completed games retain larger Find highlights links. Dates and team names remain visible; YouTube search results and external team/standings pages can themselves contain spoilers. The regular URL is unchanged.
+
+## Overnight highlights
+
+The existing 10:17/22:17 UTC workflow also checks recent completed games for
+highlights. The morning run covers the previous evening's games (5:17 a.m.
+Eastern in winter, 6:17 a.m. in summer). It reads the repository Actions secret
+`YOUTUBE_API_KEY`; no key is published or sent to the browser.
+
+`scripts/highlight-channels.json` lists approved channel IDs. Pro games use only
+the official NFL/MLB channel. College games prefer the recorded broadcaster,
+then approved conference/NCAA channels. Team channels are excluded. Matching
+checks both teams, sport/gender, game/publication date, duration and doubleheader
+number. Ambiguity retains Find highlights. Channel coverage is intentionally
+conservative; not every broadcaster or conference publishes suitable videos.
+
+A confident match changes the button to Watch highlights, opening the video
+directly in both regular and no-spoilers modes. No YouTube titles, descriptions
+or thumbnails appear on the scoreboard. YouTube itself can still show spoilers.
+Links are held for at most 14 days, and failures preserve existing verified data.
+The browser reloads `highlights.json` every 15 minutes. Like ratings,
+`publish.sh` preserves the remote automation-managed map on later publishes.
+
+Run matcher tests with `python3 scripts/test-update-highlights.py`. API calls
+read recent channel upload playlists instead of doing an expensive search per
+game; scans are capped at 150 uploads per active channel per run.

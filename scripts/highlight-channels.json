@@ -1,0 +1,217 @@
+{
+  "channels": [
+    {
+      "id": "UCDVYQ4Zhbm3S2dlz7P1GBDg",
+      "name": "NFL",
+      "role": "league",
+      "sports": [
+        "football/nfl"
+      ],
+      "source": "https://www.youtube.com/@NFL"
+    },
+    {
+      "id": "UCoLrcjPV5PbUrUyXq5mjc_A",
+      "name": "MLB",
+      "role": "league",
+      "sports": [
+        "baseball/mlb"
+      ],
+      "source": "https://www.youtube.com/@MLB"
+    },
+    {
+      "id": "UCqZQlzSHbVJrwrn5XvzrzcA",
+      "name": "NBC Sports",
+      "role": "broadcaster",
+      "sports": [
+        "football/college-football",
+        "basketball/mens-college-basketball",
+        "basketball/womens-college-basketball"
+      ],
+      "source": "https://www.youtube.com/@NBCSports",
+      "networks": [
+        "NBC",
+        "Peacock",
+        "NBCSN"
+      ]
+    },
+    {
+      "id": "UCiWLfSweyRNmLpgEHekhoAg",
+      "name": "ESPN",
+      "role": "broadcaster",
+      "sports": [
+        "football/college-football",
+        "basketball/mens-college-basketball",
+        "basketball/womens-college-basketball"
+      ],
+      "source": "https://www.youtube.com/@ESPN",
+      "networks": [
+        "ESPN",
+        "ESPN2",
+        "ESPNU",
+        "ESPN+",
+        "ABC",
+        "SEC Network",
+        "SECN",
+        "ACC Network",
+        "ACCN"
+      ]
+    },
+    {
+      "id": "UCwNqHDsnBCKT-olwJwIFyfg",
+      "name": "FOX Sports",
+      "role": "broadcaster",
+      "sports": [
+        "football/college-football",
+        "basketball/mens-college-basketball",
+        "basketball/womens-college-basketball"
+      ],
+      "source": "https://www.youtube.com/@FOXSports",
+      "networks": [
+        "FOX",
+        "FS1",
+        "FS2"
+      ]
+    },
+    {
+      "id": "UCpwix-O6ceqMgdxhqIynzFA",
+      "name": "CFB ON FOX",
+      "role": "broadcaster",
+      "sports": [
+        "football/college-football"
+      ],
+      "source": "https://www.youtube.com/@CFBonFOX",
+      "networks": [
+        "FOX",
+        "FS1",
+        "FS2"
+      ]
+    },
+    {
+      "id": "UCja8sZ2T4ylIqjggA1Zuukg",
+      "name": "CBS Sports",
+      "role": "broadcaster",
+      "sports": [
+        "football/college-football",
+        "basketball/mens-college-basketball",
+        "basketball/womens-college-basketball"
+      ],
+      "source": "https://www.youtube.com/@CBSSports",
+      "networks": [
+        "CBS",
+        "CBSSN",
+        "CBS Sports Network"
+      ]
+    },
+    {
+      "id": "UC4LeRw7pIZ_kseS4Krn_DQA",
+      "name": "Big Ten Network",
+      "role": "conference",
+      "sports": [
+        "football/college-football",
+        "basketball/mens-college-basketball",
+        "basketball/womens-college-basketball"
+      ],
+      "source": "https://www.youtube.com/@BTN"
+    },
+    {
+      "id": "UCXnslB_TwYqScBRf4bPf3vA",
+      "name": "Big Ten Football",
+      "role": "conference",
+      "sports": [
+        "football/college-football"
+      ],
+      "source": "https://www.youtube.com/@B1GFootball"
+    },
+    {
+      "id": "UC93aXowsPvStnLBpOLy1Lqg",
+      "name": "Big Ten Men's Basketball",
+      "role": "conference",
+      "sports": [
+        "basketball/mens-college-basketball"
+      ],
+      "source": "https://www.youtube.com/@B1GMBB"
+    },
+    {
+      "id": "UCpPY0eWJiNWxth5b2vz5Rwg",
+      "name": "Big Ten Women's Basketball",
+      "role": "conference",
+      "sports": [
+        "basketball/womens-college-basketball"
+      ],
+      "source": "https://www.youtube.com/@B1GWBB"
+    },
+    {
+      "id": "UC0hy7TcR1gGD8nQBqrF2FaA",
+      "name": "ACC Digital Network",
+      "role": "conference",
+      "sports": [
+        "football/college-football",
+        "basketball/mens-college-basketball",
+        "basketball/womens-college-basketball"
+      ],
+      "source": "https://www.youtube.com/@ACCDigitalNetwork"
+    },
+    {
+      "id": "UCAcXdiimhsuivSn2PxtsRFw",
+      "name": "BIG EAST Conference",
+      "role": "conference",
+      "sports": [
+        "basketball/mens-college-basketball",
+        "basketball/womens-college-basketball"
+      ],
+      "source": "https://www.youtube.com/@BIGEASTConference"
+    },
+    {
+      "id": "UCKjEtnnXEHsXE9IvCb92V7g",
+      "name": "March Madness",
+      "role": "league",
+      "sports": [
+        "basketball/mens-college-basketball",
+        "basketball/womens-college-basketball"
+      ],
+      "source": "https://www.youtube.com/@MarchMadness"
+    },
+    {
+      "id": "UCzRWWsFjqHk1an4OnVPsl9g",
+      "name": "ESPN College Football",
+      "role": "broadcaster",
+      "sports": [
+        "football/college-football"
+      ],
+      "source": "https://www.youtube.com/channel/UCzRWWsFjqHk1an4OnVPsl9g",
+      "networks": [
+        "ESPN",
+        "ESPN2",
+        "ESPNU",
+        "ESPN+",
+        "ABC",
+        "SEC Network",
+        "SECN",
+        "ACC Network",
+        "ACCN"
+      ]
+    },
+    {
+      "id": "UC60q_WUDde_NK-ze3frvtiA",
+      "name": "SEC",
+      "role": "conference",
+      "sports": [
+        "football/college-football",
+        "basketball/mens-college-basketball",
+        "basketball/womens-college-basketball"
+      ],
+      "source": "https://www.youtube.com/channel/UC60q_WUDde_NK-ze3frvtiA"
+    },
+    {
+      "id": "UCLnfOCTbfqMy_3ah8OmTHEQ",
+      "name": "Big 12 Conference",
+      "role": "conference",
+      "sports": [
+        "football/college-football",
+        "basketball/mens-college-basketball",
+        "basketball/womens-college-basketball"
+      ],
+      "source": "https://www.youtube.com/channel/UCLnfOCTbfqMy_3ah8OmTHEQ"
+    }
+  ]
+}

@@ -25,16 +25,24 @@ jobs:
         id: ratings
         continue-on-error: true
         run: python3 scripts/update-nfl-elo.py
+      - name: Test highlights matching
+        run: python3 scripts/test-update-highlights.py
+      - name: Refresh official highlights
+        id: highlights
+        continue-on-error: true
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: python3 scripts/update-highlights.py
       - name: Save changes
         id: changes
         env:
           EVENT_NAME: ${{ github.event_name }}
         run: |
-          if ! git diff --quiet -- nfl-elo.json; then
+          if ! git diff --quiet -- nfl-elo.json highlights.json; then
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git add -- nfl-elo.json
-            git commit -m 'Update NFL pregame Elo ratings'
+            git add -- nfl-elo.json highlights.json
+            git commit -m 'Update ratings and official highlights'
             git push origin HEAD:main
             echo 'deploy=true' >> "$GITHUB_OUTPUT"
           elif [ "$EVENT_NAME" != 'schedule' ]; then
@@ -43,11 +51,14 @@ jobs:
       - name: Report retained snapshot
         if: steps.ratings.outcome == 'failure'
         run: echo '::warning::Ratings refresh failed. Keeping last verified snapshot.'
+      - name: Report highlights fallback
+        if: steps.highlights.outcome == 'failure'
+        run: echo '::warning::Highlights lookup failed. Keeping existing links and search fallback.'
       - name: Prepare static site
         if: steps.changes.outputs.deploy == 'true'
         run: |
           mkdir _site
-          cp index.html app.js favicon.ico favicon.svg apple-touch-icon.png nfl-elo.json .nojekyll _site/
+          cp index.html app.js favicon.ico favicon.svg apple-touch-icon.png nfl-elo.json highlights.json .nojekyll _site/
       - uses: actions/upload-pages-artifact@v4
         if: steps.changes.outputs.deploy == 'true'
         with:

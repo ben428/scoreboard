@@ -169,6 +169,25 @@ function gameLink(e,label,path){
  const link=links.find(l=>valid(l)&&(l.rel||[]).includes('summary'))||links.find(valid);
  return link?`<a href="${esc(link.href)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`:esc(label);
 }
+let highlightData={games:{}},highlightsLoaded=0;
+async function loadHighlights(){
+ if(highlightsLoaded&&Date.now()-highlightsLoaded<900000)return;
+ try{
+  const payload=await fetchJSON('highlights.json?v='+Math.floor(Date.now()/900000));
+  if(payload?.schema===1&&payload.games&&typeof payload.games==='object'&&!Array.isArray(payload.games)){
+   highlightData=payload;highlightsLoaded=Date.now();
+  }
+ }catch{/* Keep verified links; unmatched games retain the search fallback. */}
+}
+function verifiedHighlight(e,path){
+ const entry=highlightData.games?.[path+':'+String(e.id)];
+ if(!entry||entry.sport!==path||String(entry.eventId)!==String(e.id)||!isFinal(e))return '';
+ const when=eventTime(e),age=Date.now()-when;
+ if(!Number.isFinite(when)||age<0||age>14*86400000||new Date(entry.date).getTime()!==when)return '';
+ const ids=(comp(e)?.competitors||[]).map(c=>String(c.team?.id||'')).sort();
+ if(ids.length!==2||ids.some(id=>!id)||!Array.isArray(entry.teamIds)||entry.teamIds.length!==2||ids.join('|')!==entry.teamIds.slice().sort().join('|'))return '';
+ return typeof entry.videoId==='string'&&/^[A-Za-z0-9_-]{11}$/.test(entry.videoId)?'https://www.youtube.com/watch?v='+entry.videoId:'';
+}
 function highlightsLink(e,path,events=[]){
  if(!isFinal(e)||!Number.isFinite(eventTime(e)))return '';
  const competitors=comp(e)?.competitors||[];
@@ -190,8 +209,9 @@ function highlightsLink(e,path,events=[]){
    }
   }
  }
+ const direct=verifiedHighlight(e,path);
  const query=names.join(' vs ')+ ' '+(sports[path]||path)+' '+fullDate+gameNumber+' highlights';
- return `<a class="highlights-link" href="https://www.youtube.com/results?search_query=${esc(encodeURIComponent(query))}" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 16 16" style="vertical-align:-2px;margin-right:4px" fill="none"><rect x="1" y="2.5" width="14" height="11" rx="2" stroke="currentColor"/><path d="M6 5v6l5-3z" fill="currentColor"/></svg>Find highlights</a>`;
+ return `<a class="highlights-link" href="${direct||'https://www.youtube.com/results?search_query='+esc(encodeURIComponent(query))}" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 16 16" style="vertical-align:-2px;margin-right:4px" fill="none"><rect x="1" y="2.5" width="14" height="11" rx="2" stroke="currentColor"/><path d="M6 5v6l5-3z" fill="currentColor"/></svg>${direct?'Watch highlights':'Find highlights'}</a>`;
 }
 function gameFooter(e,path,events=[]){
  const highlights=highlightsLink(e,path,events),badge=upsetLabel(e,path);
@@ -451,7 +471,7 @@ async function load(){
   const results=await Promise.allSettled([loadLeagues(),...teams.map(loadTeam)]);
   if(results.some(r=>r.status==='rejected'))throw Error('Unable to render scores');
   syncTeamScores();
-  await Promise.allSettled([loadMLBLinks(),loadNFLElo(),loadUpcomingRecords()]);
+  await Promise.allSettled([loadMLBLinks(),loadNFLElo(),loadUpcomingRecords(),loadHighlights()]);
   renderLeagues();
   render();
   updateEloDate();
