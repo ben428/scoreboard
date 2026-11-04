@@ -17,6 +17,7 @@ from zoneinfo import ZoneInfo
 UTC = dt.timezone.utc
 EASTERN = ZoneInfo('America/New_York')
 ROOT = Path(__file__).resolve().parent.parent
+MAX_UPLOAD_PAGES = 40  # Safety limit; an incomplete scan must retain cached links.
 SPORTS = ['baseball/mlb', 'football/nfl', 'football/college-football',
           'basketball/mens-college-basketball', 'basketball/womens-college-basketball']
 FAVORITES = [('football/college-football', '130'), ('baseball/mlb', '2'), ('football/nfl', '17'),
@@ -80,7 +81,7 @@ def collect_games(now):
                 continue
     # Daily scoreboards cover the panels; schedules include unranked favorites.
     for sport in SPORTS:
-        for offset in range(3):
+        for offset in range(8 if sport.startswith('football/') else 3):
             day = (now.astimezone(EASTERN).date() - dt.timedelta(days=offset)).strftime('%Y%m%d')
             url = f'https://site.api.espn.com/apis/site/v2/sports/{sport}/scoreboard?limit=200&dates={day}'
             if sport == 'football/college-football': url += '&groups=80'
@@ -120,8 +121,39 @@ def priority(channel, game):
 def team_aliases(team):
     aliases = {team.get('displayName', ''), team.get('shortDisplayName', ''), team.get('location', '')}
     if str(team.get('id')) == '41': aliases.update(('UConn', 'Connecticut'))
-    # Ambiguous two/three-letter codes are deliberately not used.
-    return {normalize(a) for a in aliases if len(normalize(a)) >= 4}
+    # Provider abbreviations are usable only inside an explicit two-team matchup.
+    abbreviation = team.get('abbreviation', '')
+    if re.fullmatch(r'[A-Z0-9]{3,6}', abbreviation): aliases.add(abbreviation)
+    return {normalize(a) for a in aliases if len(normalize(a)) >= 3}
+
+
+def matchup_in_title(text, aliases):
+    # Requiring A vs/at B avoids mistaking player highlights vs B for a game
+    # when A appears only in the channel's trailing branding.
+    return any(a != b and re.search(r'(?<![a-z0-9])' + re.escape(a) +
+               r'\s+(?:at|vs?|versus)\s+(?:no\s+)?(?:\d+\s+)?' + re.escape(b) + r'(?![a-z0-9])', text)
+               for first, second in (aliases, aliases[::-1]) for a in first for b in second)
+
+
+def basketball_gender(snippet, channel):
+    def markers(text):
+        text = normalize(text)
+        genders = set()
+        if re.search(r'\b(women|womens|wbb|ncaaw)\b', text): genders.add('women')
+        if re.search(r'\b(men|mens|mbb|ncaam)\b', text): genders.add('men')
+        return genders
+    title = markers(snippet.get('title', ''))
+    if title: return next(iter(title)) if len(title) == 1 else None
+    sports = set(channel['sports'])
+    specific = {'women' for sport in sports if sport == 'basketball/womens-college-basketball'}
+    if 'basketball/mens-college-basketball' in sports: specific.add('men')
+    if len(specific) == 1: return next(iter(specific))
+    # Only the game introduction, never channel footers or promotional links.
+    intro = re.split(r'\n\s*\n', snippet.get('description', ''), maxsplit=1)[0]
+    intro = '\n'.join(line for line in intro.splitlines()
+                      if not re.search(r'https?://|youtube|subscribe|follow|official channel', line, re.I))
+    focused = markers(intro)
+    return next(iter(focused)) if len(focused) == 1 else None
 
 
 def date_evidence(text, game_date):
@@ -148,6 +180,11 @@ def date_evidence(text, game_date):
     return None if not dates else game_date in dates and all(d == game_date for d in dates)
 
 
+def video_seconds(video):
+    parts = re.fullmatch(r'PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?', video.get('contentDetails', {}).get('duration', ''))
+    return sum(int(n or 0)*unit for n, unit in zip(parts.groups(), (3600, 60, 1))) if parts else 0
+
+
 def candidate_matches(video, game, channel):
     if priority(channel, game) is None: return False
     snippet = video.get('snippet', {})
@@ -159,10 +196,9 @@ def candidate_matches(video, game, channel):
     if not re.search(r'\bhighlights\b', text): return False
     if re.search(r'\b(preview|prediction|reaction|interview|press conference|analysis|shorts|first half|second half|quarter highlights|top plays)\b', text): return False
     try:
-        duration = video['contentDetails']['duration']
-        parts = re.fullmatch(r'PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?', duration)
-        seconds = sum(int(n or 0)*unit for n, unit in zip(parts.groups(), (3600, 60, 1))) if parts else 0
-        if not 120 <= seconds <= 2400: return False
+        seconds = video_seconds(video)
+        if not 60 <= seconds <= 2400: return False
+        if seconds < 120 and not re.search(r'\b(?:full |full game |extended |game )highlights\b|(?:^|\|)\s*highlights\s*(?:\||$)', title, re.I): return False
         started = instant(game['event']['date'])
         published = instant(snippet['publishedAt'])
         if not dt.timedelta(0) <= published - started <= dt.timedelta(hours=72): return False
@@ -170,14 +206,13 @@ def candidate_matches(video, game, channel):
     # Both teams must occur independently in the title, not just the description.
     competitors = game['event']['competitions'][0]['competitors']
     aliases = [team_aliases(c['team']) for c in competitors]
-    hits = [{a for a in group if ' ' + a + ' ' in ' ' + text + ' '} for group in aliases]
-    if not all(hits) or not any(a != b and a not in b and b not in a for a in hits[0] for b in hits[1]): return False
+    if not matchup_in_title(text, aliases): return False
     sport = game['sport']
     description = normalize(snippet.get('description', '')[:1500])
     combined = text + ' ' + description
-    women = bool(re.search(r'\b(women|womens|wbb|ncaaw)\b', combined))
-    if sport.endswith('womens-college-basketball') and not women: return False
-    if sport.endswith('mens-college-basketball') and not sport.endswith('womens-college-basketball') and women: return False
+    if sport.startswith('basketball/'):
+        expected = 'women' if sport.endswith('womens-college-basketball') else 'men'
+        if basketball_gender(snippet, channel) != expected: return False
     if 'basketball' in sport and ('football' in text or 'baseball' in text): return False
     if sport.startswith('football/') and ('basketball' in text or 'baseball' in text): return False
     if sport == 'baseball/mlb' and ('basketball' in text or 'football' in text): return False
@@ -205,27 +240,44 @@ def select_video(game, videos, channels, all_games):
     if not candidates: return None
     best = min(rank for rank, _ in candidates)
     finalists = {v['id']: v for rank, v in candidates if rank == best}
-    if len(finalists) != 1: return None
+    if len(finalists) != 1:
+        # A channel may publish a short and a longer edit of the same game.
+        # Prefer the unique longer edit; cross-channel/tied ambiguity stays search.
+        if len({v['snippet']['channelId'] for v in finalists.values()}) != 1: return None
+        longest = max(video_seconds(v) for v in finalists.values())
+        finalists = {id: v for id, v in finalists.items() if video_seconds(v) == longest}
+        if len(finalists) != 1: return None
     return next(iter(finalists.values()))
 
 
-def channel_videos(channel, key, now):
+def channel_videos(channel, key, now, since=None):
+    cutoff = since or now - dt.timedelta(days=7)
     details = youtube('channels', key, part='contentDetails', id=channel['id']).get('items', [])
     if len(details) != 1: raise RuntimeError('Approved channel unavailable')
     playlist = details[0]['contentDetails']['relatedPlaylists']['uploads']
-    ids, token = [], None
-    for _ in range(3):
+    ids, token, seen_tokens = set(), None, set()
+    for _ in range(MAX_UPLOAD_PAGES):
         params = {'part': 'contentDetails', 'playlistId': playlist, 'maxResults': 50}
         if token: params['pageToken'] = token
         page = youtube('playlistItems', key, **params)
-        for item in page.get('items', []):
+        items = page.get('items', [])
+        published_dates = []
+        for item in items:
             content = item.get('contentDetails', {})
             try:
-                if now - instant(content['videoPublishedAt']) <= dt.timedelta(days=10): ids.append(content['videoId'])
+                published = instant(content['videoPublishedAt'])
+                published_dates.append(published)
+                if cutoff <= published <= now: ids.add(content['videoId'])
             except (KeyError, ValueError): continue
         token = page.get('nextPageToken')
-        if not token: break
+        # A complete page older than every relevant game establishes coverage.
+        if not token or (items and len(published_dates) == len(items) and max(published_dates) < cutoff): break
+        if token in seen_tokens: raise RuntimeError('Upload pagination repeated; retaining cached links')
+        seen_tokens.add(token)
+    else:
+        raise RuntimeError('Upload scan reached safety limit; retaining cached links')
     videos = []
+    ids = sorted(ids)
     for offset in range(0, len(ids), 50):
         videos.extend(youtube('videos', key, part='snippet,contentDetails,status', id=','.join(ids[offset:offset+50])).get('items', []))
     return videos
@@ -242,9 +294,11 @@ def update(path, key, now=None):
     videos = {}
     failed = set()
     for channel in channels.values():
-        if not any(priority(channel, g) is not None for g in games.values()): continue
+        eligible = [g for g in games.values() if priority(channel, g) is not None]
+        if not eligible: continue
+        since = min(instant(g['event']['date']) for g in eligible)
         try:
-            for video in channel_videos(channel, key, now): videos[video['id']] = video
+            for video in channel_videos(channel, key, now, since): videos[video['id']] = video
         except Exception as error:
             failed.add(channel['id'])
             detail = str(error) if isinstance(error, RuntimeError) and re.fullmatch(r'YouTube API HTTP [0-9]{3} \([A-Za-z0-9_.,-]+\)', str(error)) else 'request failed'

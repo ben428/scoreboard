@@ -29,7 +29,7 @@ Open `https://ben428.github.io/scoreboard/?spoilers=off` to hide scores, progres
 ## Overnight highlights
 
 The existing 10:17/22:17 UTC workflow also checks recent completed games for
-highlights. The morning run covers the previous evening's games (5:17 a.m.
+highlights (the previous seven days for football and three calendar days for other sports). The morning run covers the previous evening's games (5:17 a.m.
 Eastern in winter, 6:17 a.m. in summer). It reads the repository Actions secret
 `YOUTUBE_API_KEY`; no key is published or sent to the browser.
 
@@ -49,4 +49,8 @@ The browser reloads `highlights.json` every 15 minutes. Like ratings,
 
 Run matcher tests with `python3 scripts/test-update-highlights.py`. API calls
 read recent channel upload playlists instead of doing an expensive search per
-game; scans are capped at 150 uploads per active channel per run.
+game; scans paginate back to the earliest relevant game date, with a 40-page safety limit per active channel. Incomplete scans preserve cached links.
+
+Matching uses explicit two-team matchup titles and provider abbreviations such as FDU and SMU. Basketball gender comes from the title, a sport-specific channel, or the game introduction—not promotional channel footers. Official game summaries of at least one minute can qualify; shorter individual-play clips remain excluded.
+
+When the same approved channel posts multiple qualifying edits of one game, prefer the unique longer edit. Equally preferred videos from different channels, tied edit lengths, or videos matching multiple games still fall back to search.
