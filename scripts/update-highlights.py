@@ -43,7 +43,14 @@ def youtube(resource, key, **params):
     try:
         return read_json('https://www.googleapis.com/youtube/v3/' + resource + '?' + urlencode({**params, 'key': key}))
     except HTTPError as error:
-        raise RuntimeError('YouTube API HTTP ' + str(error.code)) from None
+        reason = 'unknown'
+        try:
+            details = json.loads(error.read()).get('error', {})
+            errors = details.get('errors', [])
+            candidate = errors[0].get('reason', '') if errors else ''
+            if re.fullmatch(r'[A-Za-z0-9_.-]{1,80}', candidate): reason = candidate
+        except Exception: pass
+        raise RuntimeError('YouTube API HTTP ' + str(error.code) + ' (' + reason + ')') from None
     except Exception:
         raise RuntimeError('YouTube API request failed') from None
 
@@ -238,7 +245,8 @@ def update(path, key, now=None):
             for video in channel_videos(channel, key, now): videos[video['id']] = video
         except Exception as error:
             failed.add(channel['id'])
-            print('::warning::Highlights unavailable for approved channel ' + channel['name'] + '. Cached links retained.')
+            detail = str(error) if isinstance(error, RuntimeError) and re.fullmatch(r'YouTube API HTTP [0-9]{3} \([A-Za-z0-9_.-]+\)', str(error)) else 'request failed'
+            print('::warning::Highlights unavailable for approved channel ' + channel['name'] + ': ' + detail + '. Cached links retained.')
     if not videos: raise RuntimeError('No channel data available; retaining existing map')
     old = json.loads(path.read_text()) if path.exists() else {'schema': 1, 'games': {}}
     entries = {}
