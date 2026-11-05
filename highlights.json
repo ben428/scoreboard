@@ -704,6 +704,17 @@
       ],
       "videoId": "Ksjm77CquPo"
     },
+    "basketball/womens-college-basketball:401913736": {
+      "channelId": "UC0hy7TcR1gGD8nQBqrF2FaA",
+      "date": "2026-11-04T23:00Z",
+      "eventId": "401913736",
+      "sport": "basketball/womens-college-basketball",
+      "teamIds": [
+        "152",
+        "2097"
+      ],
+      "videoId": "ehS6wJJaeuI"
+    },
     "basketball/womens-college-basketball:401913855": {
       "channelId": "UCpPY0eWJiNWxth5b2vz5Rwg",
       "date": "2026-11-02T23:00Z",
@@ -769,6 +780,17 @@
         "2294"
       ],
       "videoId": "KTQpUzaOqpE"
+    },
+    "basketball/womens-college-basketball:401927060": {
+      "channelId": "UCpPY0eWJiNWxth5b2vz5Rwg",
+      "date": "2026-11-05T00:00Z",
+      "eventId": "401927060",
+      "sport": "basketball/womens-college-basketball",
+      "teamIds": [
+        "2174",
+        "356"
+      ],
+      "videoId": "X5M0COLNMbk"
     },
     "basketball/womens-college-basketball:401927081": {
       "channelId": "UCpPY0eWJiNWxth5b2vz5Rwg",
@@ -1355,5 +1377,5 @@
     }
   },
   "schema": 1,
-  "updated": "2026-11-04T10:26:45.625931+00:00"
+  "updated": "2026-11-05T02:29:00.030859+00:00"
 }
