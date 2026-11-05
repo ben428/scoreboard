@@ -11,6 +11,17 @@
       ],
       "videoId": "CQr3Y5TVhxY"
     },
+    "basketball/mens-college-basketball:401902276": {
+      "channelId": "UCAcXdiimhsuivSn2PxtsRFw",
+      "date": "2026-11-05T00:00Z",
+      "eventId": "401902276",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "161",
+        "2086"
+      ],
+      "videoId": "IqETt8V83gI"
+    },
     "basketball/mens-college-basketball:401906769": {
       "channelId": "UC0hy7TcR1gGD8nQBqrF2FaA",
       "date": "2026-11-02T23:00Z",
@@ -318,6 +329,17 @@
         "25"
       ],
       "videoId": "9FTgScKudZc"
+    },
+    "basketball/mens-college-basketball:401918052": {
+      "channelId": "UC0hy7TcR1gGD8nQBqrF2FaA",
+      "date": "2026-11-05T02:00Z",
+      "eventId": "401918052",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "25",
+        "2515"
+      ],
+      "videoId": "FQQ_8qdKWZk"
     },
     "basketball/mens-college-basketball:401918073": {
       "channelId": "UC0hy7TcR1gGD8nQBqrF2FaA",
@@ -648,6 +670,17 @@
         "97"
       ],
       "videoId": "hO0F8w2GZpo"
+    },
+    "basketball/womens-college-basketball:401906075": {
+      "channelId": "UC0hy7TcR1gGD8nQBqrF2FaA",
+      "date": "2026-11-05T01:00Z",
+      "eventId": "401906075",
+      "sport": "basketball/womens-college-basketball",
+      "teamIds": [
+        "56",
+        "97"
+      ],
+      "videoId": "VoLIuQnPcHE"
     },
     "basketball/womens-college-basketball:401906088": {
       "channelId": "UC0hy7TcR1gGD8nQBqrF2FaA",
@@ -1210,6 +1243,28 @@
       ],
       "videoId": "Z0bq0Kequc8"
     },
+    "football/college-football:401866455": {
+      "channelId": "UCzRWWsFjqHk1an4OnVPsl9g",
+      "date": "2026-11-05T00:00Z",
+      "eventId": "401866455",
+      "sport": "football/college-football",
+      "teamIds": [
+        "113",
+        "2050"
+      ],
+      "videoId": "4jWzSk9o63U"
+    },
+    "football/college-football:401866456": {
+      "channelId": "UCzRWWsFjqHk1an4OnVPsl9g",
+      "date": "2026-11-05T00:30Z",
+      "eventId": "401866456",
+      "sport": "football/college-football",
+      "teamIds": [
+        "2117",
+        "2199"
+      ],
+      "videoId": "E45EPhG8dwk"
+    },
     "football/college-football:401869963": {
       "channelId": "UCzRWWsFjqHk1an4OnVPsl9g",
       "date": "2026-10-29T23:30Z",
@@ -1377,5 +1432,5 @@
     }
   },
   "schema": 1,
-  "updated": "2026-11-05T02:29:00.030859+00:00"
+  "updated": "2026-11-05T18:01:43.887900+00:00"
 }
