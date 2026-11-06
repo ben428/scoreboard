@@ -434,16 +434,40 @@ async function loadTeam(t,i){
  const previous=data[i];
  try{
   const seasonTypes=[2,3];
-  const results=await Promise.allSettled(seasonTypes.map(seasonType=>fetchJSON(`https://site.api.espn.com/apis/site/v2/sports/${t.path}/teams/${t.id}/schedule?seasontype=${seasonType}`)));
+  // Favorites without a league panel still need the scoreboard's live scores.
+  const needsScoreboard=!leagues.some(l=>l.path===t.path);
+  const requests=seasonTypes.map(seasonType=>fetchJSON(`https://site.api.espn.com/apis/site/v2/sports/${t.path}/teams/${t.id}/schedule?seasontype=${seasonType}`));
+  if(needsScoreboard)requests.push(fetchJSON(`https://site.api.espn.com/apis/site/v2/sports/${t.path}/scoreboard?limit=200`));
+  const results=await Promise.allSettled(requests);
   const seasonFeeds={};
-  results.forEach((r,j)=>{
+  results.slice(0,2).forEach((r,j)=>{
    if(r.status==='fulfilled')seasonFeeds[seasonTypes[j]]=r.value;
    else if(previous?.seasonFeeds?.[seasonTypes[j]])seasonFeeds[seasonTypes[j]]=previous.seasonFeeds[seasonTypes[j]];
   });
-  if(!Object.keys(seasonFeeds).length)throw Error('Feed unavailable');
-  data[i]={events:mergeEvents(Object.values(seasonFeeds)),seasonFeeds,partial:results.some(r=>r.status==='rejected')};
+  const scoreboard=needsScoreboard&&results[2].status==='fulfilled'?results[2].value:null;
+  const current=(scoreboard?.events||[]).filter(e=>(comp(e)?.competitors||[]).some(c=>String(c.team?.id)===t.id));
+  if(!Object.keys(seasonFeeds).length&&!current.length)throw Error('Feed unavailable');
+  const events=new Map(mergeEvents(Object.values(seasonFeeds)).map(e=>[String(e.id),e]));
+  current.forEach(e=>events.set(String(e.id),{...events.get(String(e.id)),...e}));
+  // If the live feed fails, keep usable cached scores missing from the schedule.
+  const scoreboardFailed=needsScoreboard&&results[2].status==='rejected';
+  if(scoreboardFailed){
+   const cached=new Map((previous?.events||[]).map(e=>[String(e.id),e]));
+   events.forEach((e,id)=>{
+    const prior=comp(cached.get(id))?.competitors||[];
+    const competition=comp(e);
+    if(!competition)return;
+    const competitors=(competition.competitors||[]).map(c=>{
+     const old=prior.find(other=>String(other.team?.id)===String(c.team?.id));
+     return c.score==null&&old?.score!=null?{...c,score:old.score}:c;
+    });
+    events.set(id,{...e,competitions:[{...competition,competitors},...(e.competitions||[]).slice(1)]});
+   });
+  }
+  data[i]={events:[...events.values()],seasonFeeds,partial:results.some(r=>r.status==='rejected')};
  }catch{data[i]=retainOnFailure(previous)}
 }
+
 function syncTeamScores(){
  teams.forEach((t,i)=>{
   const feeds=leagueData.filter((feed,j)=>leagues[j].path===t.path&&feed&&!feed.error&&!feed.partial&&!feed.stale);
