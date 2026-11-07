@@ -283,6 +283,42 @@ def channel_videos(channel, key, now, since=None):
     return videos
 
 
+def diagnose_lookup(games, videos, channels, key):
+    """Opt-in ID-only diagnostics; probes never enter selection or the public map."""
+    target = os.environ.get('HIGHLIGHTS_DEBUG_EVENT', '')
+    ids = os.environ.get('HIGHLIGHTS_DEBUG_VIDEOS', '').split(',')
+    ids = [v for v in ids if re.fullmatch(r'[A-Za-z0-9_-]{11}', v)]
+    if not target or not ids: return
+    game = games.get(target)
+    print('Highlights diagnostic: ' + json.dumps({'event': target, 'collected': game is not None}))
+    try:
+        probes = {v['id']: v for v in youtube('videos', key, part='snippet,contentDetails,status', id=','.join(ids)).get('items', [])}
+    except Exception:
+        print('Highlights diagnostic: direct metadata probe failed')
+        return
+    for video_id in ids:
+        video = probes.get(video_id)
+        report = {'videoId': video_id, 'retrievedByUploadScan': video_id in videos, 'directMetadataAvailable': video is not None}
+        if video and game:
+            channel = channels.get(video.get('snippet', {}).get('channelId'))
+            report['approvedChannel'] = channel is not None
+            if channel:
+                report['priority'] = priority(channel, game)
+                report['gender'] = basketball_gender(video.get('snippet', {}), channel)
+                report['matchesTarget'] = candidate_matches(video, game, channel)
+                report['matchingEvents'] = sorted(k for k, g in games.items() if candidate_matches(video, g, channel))
+        print('Highlights diagnostic: ' + json.dumps(report, sort_keys=True))
+    if game:
+        candidates = []
+        for video in videos.values():
+            channel = channels.get(video.get('snippet', {}).get('channelId'))
+            if channel and candidate_matches(video, game, channel):
+                candidates.append({'videoId': video['id'], 'channelId': channel['id'], 'priority': priority(channel, game),
+                    'seconds': video_seconds(video), 'matchingEventCount': sum(candidate_matches(video, g, channel) for g in games.values())})
+        selected = select_video(game, list(videos.values()), channels, games)
+        print('Highlights diagnostic: ' + json.dumps({'candidates': candidates, 'selectedVideoId': selected['id'] if selected else None}, sort_keys=True))
+
+
 def update(path, key, now=None):
     now = now or dt.datetime.now(UTC)
     config = json.loads((ROOT/'scripts/highlight-channels.json').read_text())
@@ -303,6 +339,7 @@ def update(path, key, now=None):
             failed.add(channel['id'])
             detail = str(error) if isinstance(error, RuntimeError) and re.fullmatch(r'YouTube API HTTP [0-9]{3} \([A-Za-z0-9_.,-]+\)', str(error)) else 'request failed'
             print('::warning::Highlights unavailable for approved channel ' + channel['name'] + ': ' + detail + '. Cached links retained.')
+    diagnose_lookup(games, videos, channels, key)
     if not videos: raise RuntimeError('No channel data available; retaining existing map')
     old = json.loads(path.read_text()) if path.exists() else {'schema': 1, 'games': {}}
     entries = {}

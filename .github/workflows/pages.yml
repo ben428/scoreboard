@@ -34,6 +34,8 @@ jobs:
         continue-on-error: true
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          HIGHLIGHTS_DEBUG_EVENT: basketball/mens-college-basketball:401920685
+          HIGHLIGHTS_DEBUG_VIDEOS: Sctuo3pZ3Ts,ochOgSz9xCI
         run: python3 scripts/update-highlights.py
       - name: Save changes
         id: changes

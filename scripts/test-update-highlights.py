@@ -30,6 +30,31 @@ def fixture():
 class HighlightsTests(unittest.TestCase):
     def setUp(self): self.channel, self.game, self.video = fixture()
     def matches(self): return u.candidate_matches(self.video, self.game, self.channel)
+    def test_diagnostics_probe_does_not_change_discovered_videos(self):
+        import contextlib
+        import io
+        videos = {}
+        output = io.StringIO()
+        env = {'HIGHLIGHTS_DEBUG_EVENT': 'one', 'HIGHLIGHTS_DEBUG_VIDEOS': self.video['id']}
+        with patch.dict(u.os.environ, env), patch.object(u, 'youtube', return_value={'items': [self.video]}), contextlib.redirect_stdout(output):
+            u.diagnose_lookup({'one': self.game}, videos, {self.channel['id']: self.channel}, 'SECRET')
+        self.assertEqual(videos, {})
+        self.assertIn('"retrievedByUploadScan": false', output.getvalue())
+        self.assertIn('"matchesTarget": true', output.getvalue())
+        self.assertNotIn('SECRET', output.getvalue())
+        self.assertNotIn(self.video['snippet']['title'], output.getvalue())
+        self.assertNotIn(self.video['snippet']['description'], output.getvalue())
+
+    def test_diagnostics_sanitize_api_failure(self):
+        import contextlib
+        import io
+        output = io.StringIO()
+        env = {'HIGHLIGHTS_DEBUG_EVENT': 'one', 'HIGHLIGHTS_DEBUG_VIDEOS': self.video['id']}
+        with patch.dict(u.os.environ, env), patch.object(u, 'youtube', side_effect=ValueError('SECRET URL')), contextlib.redirect_stdout(output):
+            u.diagnose_lookup({'one': self.game}, {}, {}, 'SECRET')
+        self.assertIn('probe failed', output.getvalue())
+        self.assertNotIn('SECRET', output.getvalue())
+
     def test_correct_match(self): self.assertTrue(self.matches())
     def test_wrong_date(self):
         self.video['snippet']['title'] = self.video['snippet']['title'].replace('11/2/26', '11/1/26')
