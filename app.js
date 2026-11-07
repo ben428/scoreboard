@@ -188,6 +188,27 @@ function verifiedHighlight(e,path){
  if(ids.length!==2||ids.some(id=>!id)||!Array.isArray(entry.teamIds)||entry.teamIds.length!==2||ids.join('|')!==entry.teamIds.slice().sort().join('|'))return '';
  return typeof entry.videoId==='string'&&/^[A-Za-z0-9_-]{11}$/.test(entry.videoId)?'https://www.youtube.com/watch?v='+entry.videoId:'';
 }
+let competitiveData={games:{}},competitiveLoaded=0,showCompetitive=false;
+async function loadCompetitive(){
+ if(!noSpoilers||competitiveLoaded&&Date.now()-competitiveLoaded<900000)return;
+ try{
+  const payload=await fetchJSON('competitive-games.json?v='+Math.floor(Date.now()/900000));
+  if(payload?.schema===1&&payload.games&&typeof payload.games==='object'&&!Array.isArray(payload.games)){
+   competitiveData=payload;competitiveLoaded=Date.now();
+  }
+ }catch{/* Optional tags never block scores or highlights. */}
+}
+function competitiveBadge(e,path){
+ if(!noSpoilers||!showCompetitive||!isFinal(e))return '';
+ const competitors=comp(e)?.competitors||[],values=competitors.map(c=>score(c));
+ const valid=values.length===2&&values.every(v=>v!==null&&v!==''&&/^[0-9]+(?:\.[0-9]+)?$/.test(String(v)));
+ const limit=path==='baseball/mlb'?1:path.startsWith('basketball/')?5:7;
+ const close=valid&&Math.abs(Number(values[0])-Number(values[1]))<=limit;
+ const entry=competitiveData.games?.[path+':'+String(e.id)],when=eventTime(e),age=Date.now()-when;
+ const ids=competitors.map(c=>String(c.team?.id||'')).sort();
+ const verified=entry&&entry.sport===path&&String(entry.eventId)===String(e.id)&&Number.isFinite(when)&&age>=0&&age<=14*86400000&&new Date(entry.date).getTime()===when&&ids.length===2&&ids.every(Boolean)&&Array.isArray(entry.teamIds)&&entry.teamIds.length===2&&ids.join('|')===entry.teamIds.slice().sort().join('|');
+ return close||verified?'<span class="competitive-tag">Competitive game</span>':'';
+}
 function highlightsLink(e,path,events=[]){
  if(!isFinal(e)||!Number.isFinite(eventTime(e)))return '';
  const competitors=comp(e)?.competitors||[];
@@ -214,7 +235,7 @@ function highlightsLink(e,path,events=[]){
  return `<a class="highlights-link" href="${direct||'https://www.youtube.com/results?search_query='+esc(encodeURIComponent(query))}" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 16 16" style="vertical-align:-2px;margin-right:4px" fill="none"><rect x="1" y="2.5" width="14" height="11" rx="2" stroke="currentColor"/><path d="M6 5v6l5-3z" fill="currentColor"/></svg>${direct?'Watch highlights':'Find highlights'}</a>`;
 }
 function gameFooter(e,path,events=[]){
- const highlights=highlightsLink(e,path,events),badge=upsetLabel(e,path);
+ const highlights=highlightsLink(e,path,events),badge=noSpoilers?competitiveBadge(e,path):upsetLabel(e,path);
  return highlights||badge?`<div class="gamefooter">${highlights}${badge}</div>`:'';
 }
 function broadcastNetworks(e){
@@ -493,7 +514,7 @@ async function load(){
   const results=await Promise.allSettled([loadLeagues(),...teams.map(loadTeam)]);
   if(results.some(r=>r.status==='rejected'))throw Error('Unable to render scores');
   syncTeamScores();
-  await Promise.allSettled([loadMLBLinks(),loadNFLElo(),loadUpcomingRecords(),loadHighlights()]);
+  await Promise.allSettled([loadMLBLinks(),loadNFLElo(),loadUpcomingRecords(),loadHighlights(),loadCompetitive()]);
   renderLeagues();
   render();
   updateEloDate();
@@ -507,5 +528,7 @@ async function load(){
   busy=false;
  }
 }
+document.querySelector('#competitive-options').hidden=!noSpoilers;
+document.querySelector('#show-competitive').onchange=function(){showCompetitive=!!this.checked;render();renderLeagues()};
 document.querySelector('#refresh').onclick=load;
 render();leagueFilters();renderLeagues();load();setInterval(load,60000);

@@ -37,15 +37,21 @@ jobs:
           HIGHLIGHTS_DEBUG_EVENT: basketball/womens-college-basketball:401911737
           HIGHLIGHTS_DEBUG_VIDEOS: r6betOFiLFY,AtOmgDEaYv8
         run: python3 scripts/update-highlights.py
+      - name: Test competitive-game evaluation
+        run: python3 scripts/test-update-competitive-games.py
+      - name: Refresh competitive-game tags
+        id: competitive
+        continue-on-error: true
+        run: python3 scripts/update-competitive-games.py
       - name: Save changes
         id: changes
         env:
           EVENT_NAME: ${{ github.event_name }}
         run: |
-          if ! git diff --quiet -- nfl-elo.json highlights.json; then
+          if ! git diff --quiet -- nfl-elo.json highlights.json competitive-games.json; then
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git add -- nfl-elo.json highlights.json
+            git add -- nfl-elo.json highlights.json competitive-games.json
             git commit -m 'Update ratings and official highlights'
             git push origin HEAD:main
             echo 'deploy=true' >> "$GITHUB_OUTPUT"
@@ -62,7 +68,7 @@ jobs:
         if: steps.changes.outputs.deploy == 'true'
         run: |
           mkdir _site
-          cp index.html app.js favicon.ico favicon.svg apple-touch-icon.png nfl-elo.json highlights.json .nojekyll _site/
+          cp index.html app.js favicon.ico favicon.svg apple-touch-icon.png nfl-elo.json highlights.json competitive-games.json .nojekyll _site/
       - uses: actions/upload-pages-artifact@v4
         if: steps.changes.outputs.deploy == 'true'
         with:

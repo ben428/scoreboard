@@ -81,7 +81,7 @@ def collect_games(now):
                 continue
     # Daily scoreboards cover the panels; schedules include unranked favorites.
     for sport in SPORTS:
-        for offset in range(8 if sport.startswith('football/') else 3):
+        for offset in range(8 if sport.startswith('football/') else (4 if sport.startswith('basketball/') else 3)):
             day = (now.astimezone(EASTERN).date() - dt.timedelta(days=offset)).strftime('%Y%m%d')
             url = f'https://site.api.espn.com/apis/site/v2/sports/{sport}/scoreboard?limit=200&dates={day}'
             if sport == 'football/college-football': url += '&groups=80'
@@ -185,7 +185,7 @@ def video_seconds(video):
     return sum(int(n or 0)*unit for n, unit in zip(parts.groups(), (3600, 60, 1))) if parts else 0
 
 
-def candidate_matches(video, game, channel):
+def candidate_matches(video, game, channel, allow_unknown_gender=False):
     if priority(channel, game) is None: return False
     snippet = video.get('snippet', {})
     if snippet.get('channelId') != channel['id'] or video.get('status', {}).get('privacyStatus') != 'public': return False
@@ -214,7 +214,8 @@ def candidate_matches(video, game, channel):
         expected = 'women' if sport.endswith('womens-college-basketball') else 'men'
         gender = basketball_gender(snippet, channel)
         if gender != expected:
-            if gender is not None or date_evidence(title, started.astimezone(EASTERN).date()) is not True: return False
+            if gender is not None: return False
+            if not allow_unknown_gender and date_evidence(title, started.astimezone(EASTERN).date()) is not True: return False
     if 'basketball' in sport and ('football' in text or 'baseball' in text): return False
     if sport.startswith('football/') and ('basketball' in text or 'baseball' in text): return False
     if sport == 'baseball/mlb' and ('basketball' in text or 'football' in text): return False
@@ -234,31 +235,31 @@ def select_video(game, videos, channels, all_games):
     candidates = []
     for video in videos:
         channel = channels.get(video.get('snippet', {}).get('channelId'))
-        if not channel or not candidate_matches(video, game, channel): continue
+        if not channel or not candidate_matches(video, game, channel, allow_unknown_gender=True): continue
         if game['sport'].startswith('basketball/') and basketball_gender(video.get('snippet', {}), channel) is None:
-            # Same-date men's/women's matchups are ambiguous even if the other
-            # game's broadcast network would make this channel ineligible.
-            day = instant(game['event']['date']).astimezone(EASTERN).date()
-            team_ids = {str(c['team']['id']) for c in game['event']['competitions'][0]['competitors']}
-            if any(g['sport'].startswith('basketball/') and g['sport'] != game['sport']
-                   and instant(g['event']['date']).astimezone(EASTERN).date() == day
-                   and {str(c['team']['id']) for c in g['event']['competitions'][0]['competitors']} == team_ids
-                   for g in all_games.values()): continue
+            # Check identity independently of broadcaster eligibility. A second
+            # game must not disappear merely because it aired on another network.
+            identity_channel = {**channel, 'role': 'conference', 'sports': [
+                'basketball/mens-college-basketball', 'basketball/womens-college-basketball']}
+            possible = [g for g in all_games.values()
+                        if g['sport'].startswith('basketball/') and candidate_matches(
+                            video, g, identity_channel, allow_unknown_gender=True)]
+            if len(possible) != 1: continue
         # A video matching multiple dates, doubleheaders or competitions is not safe.
-        matches = [g for g in all_games.values() if candidate_matches(video, g, channel)]
+        matches = [g for g in all_games.values() if candidate_matches(video, g, channel, allow_unknown_gender=True)]
         if len(matches) != 1: continue
         candidates.append((priority(channel, game), video))
     if not candidates: return None
-    best = min(rank for rank, _ in candidates)
-    finalists = {v['id']: v for rank, v in candidates if rank == best}
-    if len(finalists) != 1:
-        # A channel may publish a short and a longer edit of the same game.
-        # Prefer the unique longer edit; cross-channel/tied ambiguity stays search.
-        if len({v['snippet']['channelId'] for v in finalists.values()}) != 1: return None
-        longest = max(video_seconds(v) for v in finalists.values())
-        finalists = {id: v for id, v in finalists.items() if video_seconds(v) == longest}
-        if len(finalists) != 1: return None
-    return next(iter(finalists.values()))
+    # All remaining candidates identify exactly this game. Source preferences
+    # resolve duplicate coverage without relaxing any game-identity checks.
+    def preference(item):
+        rank, video = item
+        channel = channels[video['snippet']['channelId']]
+        role = 0 if channel['role'] == 'conference' else 1
+        return (rank, role, channel.get('preference', 100), channel['id'],
+                -video_seconds(video), video['id'])
+    return min(candidates, key=preference)[1]
+
 
 
 def channel_videos(channel, key, now, since=None):

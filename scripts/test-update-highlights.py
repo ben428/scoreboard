@@ -138,10 +138,10 @@ class HighlightsTests(unittest.TestCase):
         self.assertIsNone(u.priority(self.channel, self.game))
         self.channel['role'] = 'league'
         self.assertEqual(u.priority(self.channel, self.game), 0)
-    def test_ambiguity_falls_back(self):
+    def test_duplicate_edits_resolve_but_game_ambiguity_falls_back(self):
         second = copy.deepcopy(self.video); second['id'] = 'zyxwvutsrqp'
         channels = {self.channel['id']: self.channel}
-        self.assertIsNone(u.select_video(self.game, [self.video, second], channels, {'one': self.game}))
+        self.assertEqual(u.select_video(self.game, [second, self.video], channels, {'one': self.game})['id'], self.video['id'])
         self.assertIsNone(u.select_video(self.game, [self.video], channels, {'one': self.game, 'two': copy.deepcopy(self.game)}))
     def test_same_channel_prefers_longer_game_edit(self):
         shorter = copy.deepcopy(self.video);shorter['id']='zyxwvutsrqp';shorter['contentDetails']['duration']='PT3M'
@@ -150,7 +150,21 @@ class HighlightsTests(unittest.TestCase):
         self.assertEqual(selected['id'],self.video['id'])
         other={**self.channel,'id':'UCother'};channels[other['id']]=other
         shorter['snippet']['channelId']=other['id']
-        self.assertIsNone(u.select_video(self.game,[shorter,self.video],channels,{'one':self.game}))
+        self.assertEqual(u.select_video(self.game,[shorter,self.video],channels,{'one':self.game})['id'], self.video['id'])
+    def test_conference_beats_ncaa_and_channel_preference_is_stable(self):
+        conference = {**self.channel, 'id': 'UCconference', 'role': 'conference', 'preference': 2}
+        ncaa = {**self.channel, 'id': 'UCncaa', 'role': 'league', 'preference': 0}
+        other = {**conference, 'id': 'UCother', 'preference': 3}
+        videos = []
+        for i, channel in enumerate([ncaa, other, conference]):
+            video = copy.deepcopy(self.video)
+            video['id'] = str(i)*11
+            video['snippet']['channelId'] = channel['id']
+            videos.append(video)
+        channels = {c['id']: c for c in [ncaa, other, conference]}
+        for order in [videos, list(reversed(videos))]:
+            self.assertEqual(u.select_video(self.game, order, channels, {'one': self.game})['snippet']['channelId'], conference['id'])
+
     def test_doubleheader_requires_game_number(self):
         self.game['event']['competitions'][0]['gameNumber'] = 2
         self.assertFalse(self.matches())
@@ -213,6 +227,25 @@ class HighlightsTests(unittest.TestCase):
         self.assertIsNone(u.select_video(self.game, [self.video], channels, {'one': self.game, 'other': other}))
         other['event']['date'] = '2026-11-01T23:00:00Z'
         self.assertEqual(u.select_video(self.game, [self.video], channels, {'one': self.game, 'other': other})['id'], self.video['id'])
+
+    def test_undated_missing_gender_requires_unique_game(self):
+        self.channel['sports'] = [SPORT, 'basketball/mens-college-basketball']
+        self.video['snippet']['title'] = 'Cornell vs UConn | College Basketball Highlights'
+        channels = {self.channel['id']: self.channel}
+        games = {'one': self.game}
+        self.assertEqual(u.select_video(self.game, [self.video], channels, games)['id'], self.video['id'])
+        other = copy.deepcopy(self.game)
+        other['sport'] = 'basketball/mens-college-basketball'
+        other['event']['date'] = '2026-11-01T23:00:00Z'
+        other['event']['competitions'][0]['broadcasts'] = [{'names': ['ESPN']}]
+        games['other'] = other
+        self.assertIsNone(u.select_video(self.game, [self.video], channels, games))
+        other['sport'] = SPORT  # Repeat matchups are equally ambiguous.
+        self.assertIsNone(u.select_video(self.game, [self.video], channels, games))
+        other['event']['date'] = '2026-10-29T23:00:00Z'
+        self.assertEqual(u.select_video(self.game, [self.video], channels, games)['id'], self.video['id'])
+        self.video['snippet']['title'] = 'Cornell vs UConn | Men Basketball Highlights'
+        self.assertIsNone(u.select_video(self.game, [self.video], channels, games))
 
     def test_gender_from_specific_channel(self):
         self.game['sport'] = 'basketball/mens-college-basketball'

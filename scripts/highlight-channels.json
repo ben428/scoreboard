@@ -7,7 +7,8 @@
       "sports": [
         "football/nfl"
       ],
-      "source": "https://www.youtube.com/@NFL"
+      "source": "https://www.youtube.com/@NFL",
+      "preference": 16
     },
     {
       "id": "UCoLrcjPV5PbUrUyXq5mjc_A",
@@ -16,7 +17,8 @@
       "sports": [
         "baseball/mlb"
       ],
-      "source": "https://www.youtube.com/@MLB"
+      "source": "https://www.youtube.com/@MLB",
+      "preference": 17
     },
     {
       "id": "UCqZQlzSHbVJrwrn5XvzrzcA",
@@ -32,7 +34,8 @@
         "NBC",
         "Peacock",
         "NBCSN"
-      ]
+      ],
+      "preference": 0
     },
     {
       "id": "UCiWLfSweyRNmLpgEHekhoAg",
@@ -54,7 +57,8 @@
         "SECN",
         "ACC Network",
         "ACCN"
-      ]
+      ],
+      "preference": 2
     },
     {
       "id": "UCwNqHDsnBCKT-olwJwIFyfg",
@@ -70,7 +74,8 @@
         "FOX",
         "FS1",
         "FS2"
-      ]
+      ],
+      "preference": 4
     },
     {
       "id": "UCpwix-O6ceqMgdxhqIynzFA",
@@ -84,7 +89,8 @@
         "FOX",
         "FS1",
         "FS2"
-      ]
+      ],
+      "preference": 3
     },
     {
       "id": "UCja8sZ2T4ylIqjggA1Zuukg",
@@ -100,7 +106,8 @@
         "CBS",
         "CBSSN",
         "CBS Sports Network"
-      ]
+      ],
+      "preference": 5
     },
     {
       "id": "UC4LeRw7pIZ_kseS4Krn_DQA",
@@ -111,7 +118,8 @@
         "basketball/mens-college-basketball",
         "basketball/womens-college-basketball"
       ],
-      "source": "https://www.youtube.com/@BTN"
+      "source": "https://www.youtube.com/@BTN",
+      "preference": 10
     },
     {
       "id": "UCXnslB_TwYqScBRf4bPf3vA",
@@ -120,7 +128,8 @@
       "sports": [
         "football/college-football"
       ],
-      "source": "https://www.youtube.com/@B1GFootball"
+      "source": "https://www.youtube.com/@B1GFootball",
+      "preference": 9
     },
     {
       "id": "UC93aXowsPvStnLBpOLy1Lqg",
@@ -129,7 +138,8 @@
       "sports": [
         "basketball/mens-college-basketball"
       ],
-      "source": "https://www.youtube.com/@B1GMBB"
+      "source": "https://www.youtube.com/@B1GMBB",
+      "preference": 7
     },
     {
       "id": "UCpPY0eWJiNWxth5b2vz5Rwg",
@@ -138,7 +148,8 @@
       "sports": [
         "basketball/womens-college-basketball"
       ],
-      "source": "https://www.youtube.com/@B1GWBB"
+      "source": "https://www.youtube.com/@B1GWBB",
+      "preference": 8
     },
     {
       "id": "UC0hy7TcR1gGD8nQBqrF2FaA",
@@ -149,7 +160,8 @@
         "basketball/mens-college-basketball",
         "basketball/womens-college-basketball"
       ],
-      "source": "https://www.youtube.com/@ACCDigitalNetwork"
+      "source": "https://www.youtube.com/@ACCDigitalNetwork",
+      "preference": 11
     },
     {
       "id": "UCAcXdiimhsuivSn2PxtsRFw",
@@ -159,7 +171,8 @@
         "basketball/mens-college-basketball",
         "basketball/womens-college-basketball"
       ],
-      "source": "https://www.youtube.com/@BIGEASTConference"
+      "source": "https://www.youtube.com/@BIGEASTConference",
+      "preference": 12
     },
     {
       "id": "UCKjEtnnXEHsXE9IvCb92V7g",
@@ -169,7 +182,8 @@
         "basketball/mens-college-basketball",
         "basketball/womens-college-basketball"
       ],
-      "source": "https://www.youtube.com/@MarchMadness"
+      "source": "https://www.youtube.com/@MarchMadness",
+      "preference": 15
     },
     {
       "id": "UCzRWWsFjqHk1an4OnVPsl9g",
@@ -189,7 +203,8 @@
         "SECN",
         "ACC Network",
         "ACCN"
-      ]
+      ],
+      "preference": 1
     },
     {
       "id": "UC60q_WUDde_NK-ze3frvtiA",
@@ -200,7 +215,8 @@
         "basketball/mens-college-basketball",
         "basketball/womens-college-basketball"
       ],
-      "source": "https://www.youtube.com/channel/UC60q_WUDde_NK-ze3frvtiA"
+      "source": "https://www.youtube.com/channel/UC60q_WUDde_NK-ze3frvtiA",
+      "preference": 13
     },
     {
       "id": "UCLnfOCTbfqMy_3ah8OmTHEQ",
@@ -211,7 +227,8 @@
         "basketball/mens-college-basketball",
         "basketball/womens-college-basketball"
       ],
-      "source": "https://www.youtube.com/channel/UCLnfOCTbfqMy_3ah8OmTHEQ"
+      "source": "https://www.youtube.com/channel/UCLnfOCTbfqMy_3ah8OmTHEQ",
+      "preference": 14
     },
     {
       "id": "UCqQo7ewe87aYAe7ub5UqXMw",
@@ -229,7 +246,8 @@
         "truTV",
         "Max",
         "HBO Max"
-      ]
+      ],
+      "preference": 6
     }
   ]
 }

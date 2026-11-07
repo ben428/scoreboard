@@ -29,8 +29,7 @@ Open `https://ben428.github.io/scoreboard/?spoilers=off` to hide scores, progres
 ## Overnight highlights
 
 The overnight and afternoon workflow runs also check recent completed games for
-highlights (the previous seven days for football and three calendar days for other sports). The morning run covers the previous evening's games (5:17 a.m.
-Eastern in winter, 6:17 a.m. in summer). It reads the repository Actions secret
+highlights (the previous seven days for football, four calendar days for basketball, and three for baseball). The overnight run is scheduled for 3:17 a.m. Eastern year-round. It reads the repository Actions secret
 `YOUTUBE_API_KEY`; no key is published or sent to the browser.
 
 `scripts/highlight-channels.json` lists approved channel IDs. Pro games use only
@@ -57,4 +56,14 @@ When the same approved channel posts multiple qualifying edits of one game, pref
 
 College basketball highlights also check House of Highlights for games broadcast on TNT, TBS, truTV, Max, or HBO Max. March Madness remains an NCAA fallback for college basketball throughout the season. Coverage is optional: exact-match and sport/gender checks still apply, and unmatched games retain Find highlights.
 
-For college basketball videos with no gender evidence, an explicit matching title game date and two-team matchup may establish identity. Conflicting gender remains rejected; same-day men’s/women’s games between the same teams remain ambiguous. Publication date alone does not qualify.
+For college basketball videos with no gender evidence, an explicit matching title game date and two-team matchup may establish identity. Conflicting gender remains rejected; same-day men’s/women’s games between the same teams remain ambiguous. Without an explicit game date, the uniqueness checks described below must pass.
+
+When multiple videos confidently identify one game, selection uses broadcaster priority, then conference over NCAA, then the explicit channel preference in `scripts/highlight-channels.json`. Specialized feeds precede general feeds. Within the preferred channel, the longest edit wins; equal-length edits use a stable video-ID tie-break. Cross-game and gender ambiguity still fall back to Find highlights.
+
+Missing basketball gender and title date may also be resolved when exactly one collected game matches the teams and 72-hour publication window. Identity checks include both genders and repeat matchups, independently of broadcast eligibility. Basketball discovery covers four Eastern calendar days to cover this window.
+
+## Competitive-game tags
+
+No Spoilers Mode has an optional, initially unchecked **Show competitive-game tags** control. Qualifying finals show only **Competitive game**, with no reason, margin, winner, overtime, or lead-change information. Final margin qualifies at five points for basketball, seven for football, or one run for baseball. Late closeness also qualifies: within five in basketball’s last five regulation minutes or overtime; within seven during football’s fourth quarter or overtime; tied or within one run in baseball’s seventh inning or later with fewer than three outs, or the trailing team’s tying run on base then.
+
+`scripts/update-competitive-games.py` evaluates recent finals using ESPN play-by-play and uniquely matched MLB play-by-play. Enrichment failures retain prior tags; the browser can always evaluate usable final scores. The workflow publishes only event identities in `competitive-games.json`, never scores or qualification reasons. The browser verifies event ID, sport, date, and teams, and accepts enrichment for 14 days. `publish.sh` seeds this automation-managed map only when absent remotely. Run `python3 scripts/test-update-competitive-games.py` for evaluator tests.
