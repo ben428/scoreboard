@@ -189,8 +189,31 @@ class HighlightsTests(unittest.TestCase):
         self.video['snippet']['title'] = "Cornell at UConn | Highlights | Men's Basketball | 11/2/26"
         self.video['snippet']['description'] = "Game highlights.\n\nSubscribe to our Women's Basketball channel: youtube.com/example"
         self.assertTrue(self.matches())
-        self.video['snippet']['title'] = 'Cornell vs UConn | Highlights | 11/2/26'
+        self.video['snippet']['title'] = 'Cornell vs UConn | Highlights'
         self.assertFalse(self.matches())  # The footer must not decide gender either way.
+    def test_missing_gender_requires_explicit_game_date(self):
+        self.channel['sports'] = [SPORT, 'basketball/mens-college-basketball']
+        self.video['snippet']['title'] = 'Cornell vs UConn | Full Game Highlights | College Basketball | November 2, 2026'
+        self.assertTrue(self.matches())
+        for date in ['', 'November 1, 2026', 'November 2, 2025']:
+            self.video['snippet']['title'] = 'Cornell vs UConn | Full Game Highlights | College Basketball | '+date
+            self.assertFalse(self.matches())
+        self.video['snippet']['title'] = 'Cornell vs UConn | Men and Women Basketball Highlights | November 2, 2026'
+        self.assertFalse(self.matches())
+        self.video['snippet']['title'] = 'Cornell vs UConn | Men Basketball Highlights | November 2, 2026'
+        self.assertFalse(self.matches())
+
+    def test_date_override_rejects_same_day_gender_collision(self):
+        self.channel['sports'] = [SPORT, 'basketball/mens-college-basketball']
+        self.video['snippet']['title'] = 'Cornell vs UConn | College Basketball Highlights | 11/2/26'
+        other = copy.deepcopy(self.game)
+        other['sport'] = 'basketball/mens-college-basketball'
+        other['event']['competitions'][0]['broadcasts'] = [{'names': ['ESPN']}]
+        channels = {self.channel['id']: self.channel}
+        self.assertIsNone(u.select_video(self.game, [self.video], channels, {'one': self.game, 'other': other}))
+        other['event']['date'] = '2026-11-01T23:00:00Z'
+        self.assertEqual(u.select_video(self.game, [self.video], channels, {'one': self.game, 'other': other})['id'], self.video['id'])
+
     def test_gender_from_specific_channel(self):
         self.game['sport'] = 'basketball/mens-college-basketball'
         self.channel['sports'] = [self.game['sport']]

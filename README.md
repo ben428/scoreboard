@@ -56,3 +56,5 @@ Matching uses explicit two-team matchup titles and provider abbreviations such a
 When the same approved channel posts multiple qualifying edits of one game, prefer the unique longer edit. Equally preferred videos from different channels, tied edit lengths, or videos matching multiple games still fall back to search.
 
 College basketball highlights also check House of Highlights for games broadcast on TNT, TBS, truTV, Max, or HBO Max. March Madness remains an NCAA fallback for college basketball throughout the season. Coverage is optional: exact-match and sport/gender checks still apply, and unmatched games retain Find highlights.
+
+For college basketball videos with no gender evidence, an explicit matching title game date and two-team matchup may establish identity. Conflicting gender remains rejected; same-day men’s/women’s games between the same teams remain ambiguous. Publication date alone does not qualify.

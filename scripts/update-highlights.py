@@ -143,7 +143,7 @@ def basketball_gender(snippet, channel):
         if re.search(r'\b(men|mens|mbb|ncaam)\b', text): genders.add('men')
         return genders
     title = markers(snippet.get('title', ''))
-    if title: return next(iter(title)) if len(title) == 1 else None
+    if title: return next(iter(title)) if len(title) == 1 else 'conflict'
     sports = set(channel['sports'])
     specific = {'women' for sport in sports if sport == 'basketball/womens-college-basketball'}
     if 'basketball/mens-college-basketball' in sports: specific.add('men')
@@ -153,7 +153,7 @@ def basketball_gender(snippet, channel):
     intro = '\n'.join(line for line in intro.splitlines()
                       if not re.search(r'https?://|youtube|subscribe|follow|official channel', line, re.I))
     focused = markers(intro)
-    return next(iter(focused)) if len(focused) == 1 else None
+    return next(iter(focused)) if len(focused) == 1 else ('conflict' if focused else None)
 
 
 def date_evidence(text, game_date):
@@ -212,7 +212,9 @@ def candidate_matches(video, game, channel):
     combined = text + ' ' + description
     if sport.startswith('basketball/'):
         expected = 'women' if sport.endswith('womens-college-basketball') else 'men'
-        if basketball_gender(snippet, channel) != expected: return False
+        gender = basketball_gender(snippet, channel)
+        if gender != expected:
+            if gender is not None or date_evidence(title, started.astimezone(EASTERN).date()) is not True: return False
     if 'basketball' in sport and ('football' in text or 'baseball' in text): return False
     if sport.startswith('football/') and ('basketball' in text or 'baseball' in text): return False
     if sport == 'baseball/mlb' and ('basketball' in text or 'football' in text): return False
@@ -233,6 +235,15 @@ def select_video(game, videos, channels, all_games):
     for video in videos:
         channel = channels.get(video.get('snippet', {}).get('channelId'))
         if not channel or not candidate_matches(video, game, channel): continue
+        if game['sport'].startswith('basketball/') and basketball_gender(video.get('snippet', {}), channel) is None:
+            # Same-date men's/women's matchups are ambiguous even if the other
+            # game's broadcast network would make this channel ineligible.
+            day = instant(game['event']['date']).astimezone(EASTERN).date()
+            team_ids = {str(c['team']['id']) for c in game['event']['competitions'][0]['competitors']}
+            if any(g['sport'].startswith('basketball/') and g['sport'] != game['sport']
+                   and instant(g['event']['date']).astimezone(EASTERN).date() == day
+                   and {str(c['team']['id']) for c in g['event']['competitions'][0]['competitors']} == team_ids
+                   for g in all_games.values()): continue
         # A video matching multiple dates, doubleheaders or competitions is not safe.
         matches = [g for g in all_games.values() if candidate_matches(video, g, channel)]
         if len(matches) != 1: continue
