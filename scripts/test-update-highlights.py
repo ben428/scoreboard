@@ -79,6 +79,27 @@ class HighlightsTests(unittest.TestCase):
         fallback = copy.deepcopy(self.video); fallback['id'] = 'zyxwvutsrqp'; fallback['snippet']['channelId'] = conf['id']
         selected = u.select_video(self.game, [fallback, self.video], {c['id']: c for c in [conf, self.channel]}, {'one': self.game})
         self.assertEqual(selected['id'], self.video['id'])
+    def test_house_of_highlights_broadcast_networks(self):
+        config = json.loads((u.ROOT/'scripts/highlight-channels.json').read_text())
+        channel = next(c for c in config['channels'] if c['name'] == 'House of Highlights')
+        self.video['snippet']['channelId'] = channel['id']
+        for network in ['TNT', 'TNT Sports', 'TBS', 'truTV', 'Max', 'HBO Max']:
+            self.game['event']['competitions'][0]['broadcasts'] = [{'names': [network]}]
+            self.assertEqual(u.priority(channel, self.game), 0)
+            self.assertTrue(u.candidate_matches(self.video, self.game, channel))
+        self.game['event']['competitions'][0]['broadcasts'] = [{'names': ['ESPN']}]
+        self.assertIsNone(u.priority(channel, self.game))
+        self.game['sport'] = 'football/nfl'
+        self.assertIsNone(u.priority(channel, self.game))
+
+    def test_march_madness_remains_college_fallback(self):
+        config = json.loads((u.ROOT/'scripts/highlight-channels.json').read_text())
+        channel = next(c for c in config['channels'] if c['name'] == 'March Madness')
+        self.game['event']['competitions'][0]['broadcasts'] = [{'names': ['TNT']}]
+        self.video['snippet']['channelId'] = channel['id']
+        self.assertEqual(u.priority(channel, self.game), 1)
+        self.assertTrue(u.candidate_matches(self.video, self.game, channel))
+
     def test_unmatched_broadcaster(self):
         self.game['event']['competitions'][0]['broadcasts'] = [{'names': ['FOX']}]
         self.assertIsNone(u.priority(self.channel, self.game))

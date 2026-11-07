@@ -212,6 +212,24 @@
         "basketball/womens-college-basketball"
       ],
       "source": "https://www.youtube.com/channel/UCLnfOCTbfqMy_3ah8OmTHEQ"
+    },
+    {
+      "id": "UCqQo7ewe87aYAe7ub5UqXMw",
+      "name": "House of Highlights",
+      "role": "broadcaster",
+      "sports": [
+        "basketball/mens-college-basketball",
+        "basketball/womens-college-basketball"
+      ],
+      "source": "https://www.youtube.com/@HouseofHighlights",
+      "networks": [
+        "TNT",
+        "TNT Sports",
+        "TBS",
+        "truTV",
+        "Max",
+        "HBO Max"
+      ]
     }
   ]
 }
