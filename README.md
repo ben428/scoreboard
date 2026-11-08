@@ -24,7 +24,7 @@ The Pages workflow runs daily at 3:17 a.m. Eastern (automatically adjusting for 
 
 ## No spoilers
 
-Open `https://ben428.github.io/scoreboard/?spoilers=off` to hide scores, progress/final/overtime status, ranks, records, and upset labels. Upcoming games and next-game previews are omitted. Completed games retain larger Find highlights links. Dates and team names remain visible; YouTube search results and external team/standings pages can themselves contain spoilers. The regular URL is unchanged.
+Open `https://ben428.github.io/scoreboard/?spoilers=off` to hide scores, progress/final/overtime status, records, and upset labels. Upcoming games and next-game previews are omitted. Completed games retain larger Find highlights links. Dates and team names remain visible; YouTube search results and external team/standings pages can themselves contain spoilers. The regular URL is unchanged.
 
 ## Overnight highlights
 
@@ -67,3 +67,5 @@ Missing basketball gender and title date may also be resolved when exactly one c
 No Spoilers Mode has an optional, initially unchecked **Show competitive-game tags** control. Qualifying finals show only **Competitive game**, with no reason, margin, winner, overtime, or lead-change information. Final margin qualifies at five points for basketball, seven for football, or one run for baseball. Late closeness also qualifies: within five in basketball’s last five regulation minutes or overtime; within seven during football’s fourth quarter or overtime; tied or within one run in baseball’s seventh inning or later with fewer than three outs, or the trailing team’s tying run on base then.
 
 `scripts/update-competitive-games.py` evaluates recent finals using ESPN play-by-play and uniquely matched MLB play-by-play. Enrichment failures retain prior tags; the browser can always evaluate usable final scores. The workflow publishes only event identities in `competitive-games.json`, never scores or qualification reasons. The browser verifies event ID, sport, date, and teams, and accepts enrichment for 14 days. `publish.sh` seeds this automation-managed map only when absent remotely. Run `python3 scripts/test-update-competitive-games.py` for evaluator tests.
+
+No Spoilers Mode displays available NCAA Top 25 ranks and matched NFL pregame Elo ranks beside team names, including favorite cards. Unknown and unranked teams have no rank number.
