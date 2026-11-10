@@ -27,6 +27,15 @@
         "221"
       ]
     },
+    "basketball/mens-college-basketball:401909718": {
+      "date": "2026-11-09T23:30Z",
+      "eventId": "401909718",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "183",
+        "84"
+      ]
+    },
     "basketball/mens-college-basketball:401911005": {
       "date": "2026-11-07T00:00Z",
       "eventId": "401911005",
@@ -108,6 +117,15 @@
         "2608"
       ]
     },
+    "basketball/mens-college-basketball:401916305": {
+      "date": "2026-11-10T00:00Z",
+      "eventId": "401916305",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "135",
+        "2132"
+      ]
+    },
     "basketball/mens-college-basketball:401917177": {
       "date": "2026-11-05T23:00Z",
       "eventId": "401917177",
@@ -160,6 +178,15 @@
       "teamIds": [
         "2000",
         "2320"
+      ]
+    },
+    "basketball/mens-college-basketball:401918074": {
+      "date": "2026-11-10T00:00Z",
+      "eventId": "401918074",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "155",
+        "228"
       ]
     },
     "basketball/mens-college-basketball:401918977": {
@@ -556,6 +583,15 @@
       "teamIds": [
         "2504",
         "292"
+      ]
+    },
+    "basketball/mens-college-basketball:401925662": {
+      "date": "2026-11-10T00:00Z",
+      "eventId": "401925662",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "134891",
+        "2011"
       ]
     },
     "basketball/mens-college-basketball:401925684": {
@@ -1136,5 +1172,5 @@
     }
   },
   "schema": 1,
-  "updated": "2026-11-09T18:54:22.599828+00:00"
+  "updated": "2026-11-10T04:07:12.676940+00:00"
 }
