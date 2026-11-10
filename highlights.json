@@ -143,6 +143,17 @@
       ],
       "videoId": "iaz2SLcaZ5o"
     },
+    "basketball/mens-college-basketball:401909502": {
+      "channelId": "UCAcXdiimhsuivSn2PxtsRFw",
+      "date": "2026-11-10T02:00Z",
+      "eventId": "401909502",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "2010",
+        "305"
+      ],
+      "videoId": "3f-YhdWgRDo"
+    },
     "basketball/mens-college-basketball:401909513": {
       "channelId": "UCqZQlzSHbVJrwrn5XvzrzcA",
       "date": "2026-11-08T00:30Z",
@@ -350,7 +361,7 @@
         "183",
         "84"
       ],
-      "videoId": "aJkntXB2hP0"
+      "videoId": "PyI19ws7ZTg"
     },
     "basketball/mens-college-basketball:401909725": {
       "channelId": "UC0hy7TcR1gGD8nQBqrF2FaA",
@@ -1100,6 +1111,17 @@
       ],
       "videoId": "ebx89I33hvc"
     },
+    "basketball/mens-college-basketball:401920887": {
+      "channelId": "UCAcXdiimhsuivSn2PxtsRFw",
+      "date": "2026-11-10T02:00Z",
+      "eventId": "401920887",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "2429",
+        "2550"
+      ],
+      "videoId": "Ccg8eoc2rmQ"
+    },
     "basketball/mens-college-basketball:401920893": {
       "channelId": "UC93aXowsPvStnLBpOLy1Lqg",
       "date": "2026-11-03T00:30Z",
@@ -1397,6 +1419,17 @@
       ],
       "videoId": "f0sp8LDXSu4"
     },
+    "basketball/mens-college-basketball:401925737": {
+      "channelId": "UC93aXowsPvStnLBpOLy1Lqg",
+      "date": "2026-11-10T03:00Z",
+      "eventId": "401925737",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "2400",
+        "264"
+      ],
+      "videoId": "kneHhWNeAh0"
+    },
     "basketball/mens-college-basketball:401925754": {
       "channelId": "UCqZQlzSHbVJrwrn5XvzrzcA",
       "date": "2026-11-06T01:00Z",
@@ -1439,7 +1472,7 @@
         "2287",
         "2509"
       ],
-      "videoId": "kJ2Ee-GKPnA"
+      "videoId": "42KUWwTdTdg"
     },
     "basketball/mens-college-basketball:401926135": {
       "channelId": "UC93aXowsPvStnLBpOLy1Lqg",
@@ -3013,8 +3046,19 @@
         "3"
       ],
       "videoId": "O1fZ6Zkabgc"
+    },
+    "football/nfl:401873051": {
+      "channelId": "UCDVYQ4Zhbm3S2dlz7P1GBDg",
+      "date": "2026-11-10T01:15Z",
+      "eventId": "401873051",
+      "sport": "football/nfl",
+      "teamIds": [
+        "16",
+        "2"
+      ],
+      "videoId": "2_ruHrqYSI4"
     }
   },
   "schema": 1,
-  "updated": "2026-11-10T04:05:35.523883+00:00"
+  "updated": "2026-11-10T16:27:26.205464+00:00"
 }
