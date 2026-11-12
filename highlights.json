@@ -220,6 +220,17 @@
       ],
       "videoId": "Xoi9M-WmBqU"
     },
+    "basketball/mens-college-basketball:401909524": {
+      "channelId": "UC93aXowsPvStnLBpOLy1Lqg",
+      "date": "2026-11-12T00:00Z",
+      "eventId": "401909524",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "130",
+        "269"
+      ],
+      "videoId": "F7QzCSWyh2o"
+    },
     "basketball/mens-college-basketball:401909531": {
       "channelId": "UCAcXdiimhsuivSn2PxtsRFw",
       "date": "2026-11-03T00:00Z",
@@ -1716,6 +1727,17 @@
       ],
       "videoId": "AMB5liQZv4E"
     },
+    "basketball/mens-college-basketball:401925682": {
+      "channelId": "UC0hy7TcR1gGD8nQBqrF2FaA",
+      "date": "2026-11-12T00:00Z",
+      "eventId": "401925682",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "2569",
+        "87"
+      ],
+      "videoId": "r1AWA1ovxVo"
+    },
     "basketball/mens-college-basketball:401925733": {
       "channelId": "UC93aXowsPvStnLBpOLy1Lqg",
       "date": "2026-11-02T23:00Z",
@@ -1869,6 +1891,17 @@
         "2579"
       ],
       "videoId": "zoKd4eMcdKc"
+    },
+    "basketball/womens-college-basketball:401906090": {
+      "channelId": "UC0hy7TcR1gGD8nQBqrF2FaA",
+      "date": "2026-11-12T00:00Z",
+      "eventId": "401906090",
+      "sport": "basketball/womens-college-basketball",
+      "teamIds": [
+        "153",
+        "2428"
+      ],
+      "videoId": "KW6XDJsBpgM"
     },
     "basketball/womens-college-basketball:401907046": {
       "channelId": "UCLnfOCTbfqMy_3ah8OmTHEQ",
@@ -2100,6 +2133,17 @@
         "251"
       ],
       "videoId": "kBGoTanYfeg"
+    },
+    "basketball/womens-college-basketball:401918842": {
+      "channelId": "UCiWLfSweyRNmLpgEHekhoAg",
+      "date": "2026-11-12T00:00Z",
+      "eventId": "401918842",
+      "sport": "basketball/womens-college-basketball",
+      "teamIds": [
+        "251",
+        "2571"
+      ],
+      "videoId": "b1MXX4-ABHg"
     },
     "basketball/womens-college-basketball:401918896": {
       "channelId": "UCpPY0eWJiNWxth5b2vz5Rwg",
@@ -3445,5 +3489,5 @@
     }
   },
   "schema": 1,
-  "updated": "2026-11-11T16:16:22.745158+00:00"
+  "updated": "2026-11-12T02:56:50.554634+00:00"
 }
