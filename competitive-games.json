@@ -126,6 +126,15 @@
         "314"
       ]
     },
+    "basketball/mens-college-basketball:401911239": {
+      "date": "2026-11-13T01:00Z",
+      "eventId": "401911239",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "257",
+        "79"
+      ]
+    },
     "basketball/mens-college-basketball:401911249": {
       "date": "2026-11-07T00:00Z",
       "eventId": "401911249",
@@ -187,6 +196,24 @@
       "teamIds": [
         "2440",
         "2608"
+      ]
+    },
+    "basketball/mens-college-basketball:401911471": {
+      "date": "2026-11-13T03:00Z",
+      "eventId": "401911471",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "23",
+        "27"
+      ]
+    },
+    "basketball/mens-college-basketball:401911533": {
+      "date": "2026-11-13T02:00Z",
+      "eventId": "401911533",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "166",
+        "2638"
       ]
     },
     "basketball/mens-college-basketball:401912209": {
@@ -286,6 +313,15 @@
       "teamIds": [
         "279",
         "299"
+      ]
+    },
+    "basketball/mens-college-basketball:401917524": {
+      "date": "2026-11-13T01:00Z",
+      "eventId": "401917524",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "2351",
+        "6"
       ]
     },
     "basketball/mens-college-basketball:401917901": {
@@ -825,6 +861,15 @@
       "sport": "basketball/mens-college-basketball",
       "teamIds": [
         "2229",
+        "2697"
+      ]
+    },
+    "basketball/mens-college-basketball:401922250": {
+      "date": "2026-11-13T01:00Z",
+      "eventId": "401922250",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "2010",
         "2697"
       ]
     },
@@ -1628,8 +1673,17 @@
         "27",
         "3"
       ]
+    },
+    "football/nfl:401873052": {
+      "date": "2026-11-13T01:15Z",
+      "eventId": "401873052",
+      "sport": "football/nfl",
+      "teamIds": [
+        "19",
+        "28"
+      ]
     }
   },
   "schema": 1,
-  "updated": "2026-11-13T02:37:59.137713+00:00"
+  "updated": "2026-11-13T16:32:06.014940+00:00"
 }
