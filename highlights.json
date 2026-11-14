@@ -3125,7 +3125,7 @@
       "videoId": "63w29Psfen0"
     },
     "football/college-football:401856860": {
-      "channelId": "UCLnfOCTbfqMy_3ah8OmTHEQ",
+      "channelId": "UCzRWWsFjqHk1an4OnVPsl9g",
       "date": "2026-11-14T03:15Z",
       "eventId": "401856860",
       "sport": "football/college-football",
@@ -3133,7 +3133,7 @@
         "248",
         "38"
       ],
-      "videoId": "GZ53A02RVpI"
+      "videoId": "AzkRsKAhtB8"
     },
     "football/college-football:401858277": {
       "channelId": "UCzRWWsFjqHk1an4OnVPsl9g",
@@ -3984,5 +3984,5 @@
     }
   },
   "schema": 1,
-  "updated": "2026-11-14T11:39:43.763578+00:00"
+  "updated": "2026-11-14T15:09:37.851149+00:00"
 }
