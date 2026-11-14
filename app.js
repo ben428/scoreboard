@@ -288,14 +288,9 @@ function relevant(e,now=Date.now()){
  if(isResult(e))return delta>=-3*86400000&&delta<=0;
  return isUpcoming(e,now)&&delta<=7*86400000;
 }
-function scheduleRow({e,t}){
- const detail=condition(e)|| (isFinal(e)?(comp(e)?.competitors||[]).map(c=>score(c)).join(' – ')+' · '+status(e):gameTime(e));
- return `<div class="scheduleitem"><div>${gameLink(e,date(e.date),t.path)}</div><div><strong>${teamLink(t.short,t.path,t.id)}</strong><br><small>${matchupPrefix(e,t)} ${opponentLink(e,t)}</small></div><small class="sport">${t.league}</small><div>${gameLink(e,detail+broadcastSuffix(e),t.path)}</div></div>`;
-}
 function feedNotice(d){return d?.partial||d?.stale?'<p class="details" role="status">Some scores may be out of date. Retrying automatically.</p>':''}
 function render(){
  const now=Date.now();
- let upcoming=[],later=[];
  document.querySelector('#cards').innerHTML=teams.map((t,i)=>{
   const d=data[i];
   if(!d)return '';
@@ -306,7 +301,6 @@ function render(){
   const latest=lastItem(results.filter(e=>eventTime(e)<=now));
   const latestFinal=lastItem(events.filter(e=>isFinal(e)&&eventTime(e)<=now));
   const next=noSpoilers?null:events.find(e=>isUpcoming(e,now));
-  events.filter(e=>isUpcoming(e,now)||(isUnresolved(e)&&relevant(e,now))).forEach(e=>upcoming.push({e,t}));
   const sameSeason=(a,b)=>{
    if(!a||!b)return false;
    const ay=a.season?.year,by=b.season?.year;
@@ -329,13 +323,7 @@ function render(){
   if(at===null||bt===null)return at===bt?a.index-b.index:at===null?1:-1;
   return (a.group===1?bt-at:at-bt)||a.index-b.index;
  }).map(card=>card.html).join('');
- upcoming.sort((a,b)=>chronological(a.e,b.e));
- const seenLater=new Set();
- for(const item of upcoming.filter(({e})=>!relevant(e,now))){if(!seenLater.has(item.t)){seenLater.add(item.t);later.push(item)}}
  if(!document.querySelector('#cards').innerHTML)document.querySelector('#cards').innerHTML=`<div class="empty">${teams.some((t,i)=>!data[i])?'Loading favorites…':noSpoilers?'No recent games.':'No live games, recent results, or games in the next seven days.'}</div>`;
- later.sort((a,b)=>chronological(a.e,b.e));
- document.querySelector('#future-section').hidden=noSpoilers;
- document.querySelector('#future-games').innerHTML=noSpoilers?'':later.map(scheduleRow).join('')||'<div class="empty">No later games available.</div>';
 }
 
 
