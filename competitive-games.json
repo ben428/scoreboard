@@ -1512,15 +1512,6 @@
         "277"
       ]
     },
-    "football/college-football:401858278": {
-      "date": "2026-10-31T16:00Z",
-      "eventId": "401858278",
-      "sport": "football/college-football",
-      "teamIds": [
-        "183",
-        "2567"
-      ]
-    },
     "football/college-football:401858282": {
       "date": "2026-10-31T23:30Z",
       "eventId": "401858282",
@@ -1575,15 +1566,6 @@
         "84"
       ]
     },
-    "football/college-football:401858503": {
-      "date": "2026-10-31T16:00Z",
-      "eventId": "401858503",
-      "sport": "football/college-football",
-      "teamIds": [
-        "120",
-        "356"
-      ]
-    },
     "football/college-football:401858504": {
       "date": "2026-11-01T00:00Z",
       "eventId": "401858504",
@@ -1591,15 +1573,6 @@
       "teamIds": [
         "158",
         "264"
-      ]
-    },
-    "football/college-football:401858507": {
-      "date": "2026-10-31T16:30Z",
-      "eventId": "401858507",
-      "sport": "football/college-football",
-      "teamIds": [
-        "130",
-        "164"
       ]
     },
     "football/college-football:401858515": {
@@ -1892,5 +1865,5 @@
     }
   },
   "schema": 1,
-  "updated": "2026-11-14T11:40:46.531992+00:00"
+  "updated": "2026-11-14T16:58:41.937145+00:00"
 }
