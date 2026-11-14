@@ -303,8 +303,15 @@ function render(){
   const game=live||(!noSpoilers&&pending)||(recent&&relevant(recent,now)?recent:null)||(nextWithinSeasonWindow?next:null);
   if(d&&!d.error&&!game)return '';
   const inside=d?.error?'<p>Scores are temporarily unavailable. Try refreshing.</p>':!d?'<p>Loading scores…</p>':!game?'<p>No games available in the current schedule.</p>':`<div class="label ${live&&!noSpoilers?'live':''}">${gameHeading(game,t.path,'● LIVE · ')}</div>${(comp(game)?.competitors||[]).slice().sort((a,b)=>(a.homeAway==='home')-(b.homeAway==='home')).map(c=>`<div class="row"><span>${c.team?.logo?`<img src="${esc(c.team.logo)}" alt="" onerror="this.style.display='none'">`:''}${competitorRank(c,{path:t.path})}${eloLabel(game,c,t.path)}${teamLink(c.team?.shortDisplayName||c.team?.displayName,t.path,c.team?.id)}${cardRecord(game,c,t.path)?` <small class="teamrecord">(${esc(cardRecord(game,c,t.path))})</small>`:''}</span>${noSpoilers?'':`<span class="score">${gameScore(game,c)}</span>`}</div>`).join('')}<div class="details">${esc(comp(game)?.venue?.fullName||'')}</div>${gameFooter(game,t.path,events)}`;
-  return `<article class="card" style="--accent:${t.color}"><div class="cardhead"><span class="team-icon"><img src="https://a.espncdn.com/i/teamlogos/${t.path.includes('college')?'ncaa':t.path.split('/')[1]}/500/${t.id}.png" alt="${esc(t.name)} logo" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span class="monogram" hidden>${t.mark}</span></span><div><div class="teamname">${teamLink(t.short,t.path,t.id)}</div><div class="league">${t.league}</div></div></div><div class="game">${inside}${feedNotice(d)}</div>${nextWithinSeasonWindow&&next.id!==game?.id?`<div class="next"><b>NEXT GAME</b>${gameDateTime(next,t.path)}<br>${matchupPrefix(next,t)} ${opponentLink(next,t)}</div>`:''}</article>`;
- }).join('');
+  const html=`<article class="card" style="--accent:${t.color}"><div class="cardhead"><span class="team-icon"><img src="https://a.espncdn.com/i/teamlogos/${t.path.includes('college')?'ncaa':t.path.split('/')[1]}/500/${t.id}.png" alt="${esc(t.name)} logo" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span class="monogram" hidden>${t.mark}</span></span><div><div class="teamname">${teamLink(t.short,t.path,t.id)}</div><div class="league">${t.league}</div></div></div><div class="game">${inside}${feedNotice(d)}</div>${nextWithinSeasonWindow&&next.id!==game?.id?`<div class="next"><b>NEXT GAME</b>${gameDateTime(next,t.path)}<br>${matchupPrefix(next,t)} ${opponentLink(next,t)}</div>`:''}</article>`;
+  const group=game?(isLive(game)?0:isUpcoming(game,now)?2:1):3;
+  return {html,group,when:game?eventTime(game):NaN,index:i};
+ }).filter(Boolean).sort((a,b)=>{
+  if(a.group!==b.group)return a.group-b.group;
+  const at=Number.isFinite(a.when)?a.when:null,bt=Number.isFinite(b.when)?b.when:null;
+  if(at===null||bt===null)return at===bt?a.index-b.index:at===null?1:-1;
+  return (a.group===1?bt-at:at-bt)||a.index-b.index;
+ }).map(card=>card.html).join('');
  upcoming.sort((a,b)=>chronological(a.e,b.e));
  const seenLater=new Set();
  for(const item of upcoming.filter(({e})=>!relevant(e,now))){if(!seenLater.has(item.t)){seenLater.add(item.t);later.push(item)}}
