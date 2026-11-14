@@ -2,10 +2,27 @@ let noSpoilers=typeof location!=='undefined'&&/(?:^|[?&])spoilers=off(?:&|$)/i.t
 if(noSpoilers){document.documentElement?.classList?.add('no-spoilers');document.querySelector('#view-mode').textContent='No Spoilers Mode'}
 // Compatible with Safari on iOS 15; avoid newer timeout and array APIs.
 function lastItem(items){return items[items.length-1]}
-async function fetchJSON(url){const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),15000);try{const response=await fetch(url,{signal:controller.signal});if(!response.ok)throw Error(response.status);return await response.json()}finally{clearTimeout(timeout)}}
+let refreshRequests=null;
+const pendingRequests=new Map();
+function fetchJSON(url){
+ const requests=refreshRequests||pendingRequests;
+ if(requests.has(url))return requests.get(url);
+ const request=(async()=>{
+  const controller=new AbortController();
+  const timeout=setTimeout(()=>controller.abort(),15000);
+  try{
+   const response=await fetch(url,{signal:controller.signal});
+   if(!response.ok)throw Error(response.status);
+   return await response.json();
+  }finally{clearTimeout(timeout)}
+ })();
+ requests.set(url,request);
+ request.then(()=>{if(requests===pendingRequests)requests.delete(url)},()=>requests.delete(url));
+ return request;
+}
 const teams=[{id:'130',path:'football/college-football',name:'Michigan Wolverines',short:'Michigan',mark:'M',color:'#00274c',league:'NCAA · FOOTBALL'},{id:'2',path:'baseball/mlb',name:'Boston Red Sox',short:'Red Sox',mark:'B',color:'#bd3039',league:'MLB · BASEBALL'},{id:'17',path:'football/nfl',name:'New England Patriots',short:'Patriots',mark:'NE',color:'#c53748',league:'NFL · FOOTBALL'},{id:'16',path:'football/nfl',name:'Minnesota Vikings',short:'Vikings',mark:'MIN',color:'#4f2683',league:'NFL · FOOTBALL'},{id:'41',path:'basketball/mens-college-basketball',name:'UConn Huskies',short:'Connecticut',mark:'U',color:'#365775',league:'NCAA · MEN’S BASKETBALL'},{id:'41',path:'basketball/womens-college-basketball',name:'UConn Huskies',short:'Connecticut',mark:'U',color:'#365775',league:'NCAA · WOMEN’S BASKETBALL'},{id:'127',path:'basketball/mens-college-basketball',name:'Michigan State Spartans',short:'Michigan State',mark:'S',color:'#31725c',league:'NCAA · MEN’S BASKETBALL'}];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let selected=-1,data=[],busy=false;
+let data=[],busy=false;
 function date(d){
  if(d==null||d===''||!Number.isFinite(new Date(d).getTime()))return 'Date TBD';
  const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short',month:'numeric',day:'numeric'}).formatToParts(new Date(d));
@@ -15,7 +32,7 @@ function date(d){
 function time(d){return d==null||d===''||!Number.isFinite(new Date(d).getTime())?'Time TBD':new Date(d).toLocaleTimeString('en-US',{timeZone:'America/New_York',hour:'numeric',minute:'2-digit'})}
 function updateToday(){document.querySelector('#today').textContent=date(new Date())}
 updateToday();
-function filters(){document.querySelector('#filters').innerHTML=['All teams',...teams.map(t=>`${t.short.startsWith('UConn')?'Connecticut':t.short} · ${{'football/college-football':'NCAAF','baseball/mlb':'MLB','football/nfl':'NFL','basketball/mens-college-basketball':'NCAAM','basketball/womens-college-basketball':'NCAAW'}[t.path]}`)].map((t,i)=>`<button class="${selected===i-1?'active':''}" data-i="${i-1}" aria-pressed="${selected===i-1}">${t}</button>`).join('');document.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>{selected=Number(b.dataset.i);filters();render()})}filters();
+
 const mlbTeamSlugs=['','orioles','redsox','angels','whitesox','guardians','tigers','royals','brewers','twins','yankees','athletics','mariners','rangers','bluejays','braves','cubs','reds','astros','dodgers','nationals','mets','phillies','pirates','cardinals','padres','giants','rockies','marlins','dbacks','rays'];
 function espnTeamURL(path,id){if(path==='baseball/mlb')return 'https://www.mlb.com/'+(mlbTeamSlugs[id]||'team');return `https://www.espn.com/${path.split('/')[1]}/team/_/id/${encodeURIComponent(id)}`}
 function teamLink(name,path,id){return id?`<a href="${espnTeamURL(path,id)}" target="_blank" rel="noopener">${esc(name)}</a>`:esc(name)}
@@ -280,8 +297,8 @@ function render(){
  const now=Date.now();
  let upcoming=[],later=[];
  document.querySelector('#cards').innerHTML=teams.map((t,i)=>{
-  if(selected!==-1&&selected!==i)return '';
   const d=data[i];
+  if(!d)return '';
   const events=(d?.events||[]).slice().sort(chronological);
   const live=events.find(isLive);
   const pending=lastItem(events.filter(e=>isUnresolved(e)&&relevant(e,now)));
@@ -315,7 +332,7 @@ function render(){
  upcoming.sort((a,b)=>chronological(a.e,b.e));
  const seenLater=new Set();
  for(const item of upcoming.filter(({e})=>!relevant(e,now))){if(!seenLater.has(item.t)){seenLater.add(item.t);later.push(item)}}
- if(!document.querySelector('#cards').innerHTML)document.querySelector('#cards').innerHTML=`<div class="empty">${noSpoilers?'No recent games.':'No live games, recent results, or games in the next seven days.'}</div>`;
+ if(!document.querySelector('#cards').innerHTML)document.querySelector('#cards').innerHTML=`<div class="empty">${teams.some((t,i)=>!data[i])?'Loading favorites…':noSpoilers?'No recent games.':'No live games, recent results, or games in the next seven days.'}</div>`;
  later.sort((a,b)=>chronological(a.e,b.e));
  document.querySelector('#future-section').hidden=noSpoilers;
  document.querySelector('#future-games').innerHTML=noSpoilers?'':later.map(scheduleRow).join('')||'<div class="empty">No later games available.</div>';
@@ -377,7 +394,10 @@ async function loadUpcomingRecords(){
   });
  });
  await Promise.allSettled([...requests].map(async([key,t])=>{
-  const feed=await fetchJSON(`https://site.api.espn.com/apis/site/v2/sports/${t.path}/teams/${t.id}/schedule?seasontype=2&season=${encodeURIComponent(t.season)}`);
+  const index=teams.findIndex(team=>team.path===t.path&&team.id===String(t.id));
+  const loaded=data[index];
+  const schedule=loaded&&!loaded.partial&&!loaded.stale&&!loaded.error?loaded.seasonFeeds?.[2]:null;
+  const feed=String(schedule?.team?.seasonSummary)===String(t.season)?schedule:await fetchJSON(`https://site.api.espn.com/apis/site/v2/sports/${t.path}/teams/${t.id}/schedule?seasontype=2&season=${encodeURIComponent(t.season)}`);
   if(String(feed.team?.seasonSummary)!==String(t.season))return;
   const record=competitorRecord({record:feed.team?.recordSummary});
   if(record)upcomingRecords.set(key,{record,loaded:Date.now()});
@@ -453,6 +473,7 @@ async function loadLeagues(){
     leagueData[i]=await fetchJSON(url);
    }
   }catch{leagueData[i]=retainOnFailure(previous)}
+  syncTeamScores();render();renderLeagues();
  }));
  renderLeagues();
 }
@@ -492,6 +513,7 @@ async function loadTeam(t,i){
   }
   data[i]={events:[...events.values()],seasonFeeds,partial:results.some(r=>r.status==='rejected')};
  }catch{data[i]=retainOnFailure(previous)}
+ syncTeamScores();render();
 }
 
 function syncTeamScores(){
@@ -511,6 +533,7 @@ function syncTeamScores(){
 async function load(){
  if(busy)return;
  busy=true;
+ refreshRequests=new Map();
  const refresh=document.querySelector('#refresh'),message=document.querySelector('#status');
  refresh.disabled=true;
  message.textContent='Updating scores…';
@@ -519,7 +542,11 @@ async function load(){
   const results=await Promise.allSettled([loadLeagues(),...teams.map(loadTeam)]);
   if(results.some(r=>r.status==='rejected'))throw Error('Unable to render scores');
   syncTeamScores();
-  await Promise.allSettled([loadMLBLinks(),loadNFLElo(),loadUpcomingRecords(),loadHighlights(),loadCompetitive()]);
+  render();renderLeagues();
+  await Promise.allSettled([loadMLBLinks(),loadNFLElo(),loadUpcomingRecords(),loadHighlights(),loadCompetitive()].map(async request=>{
+   await request;
+   syncTeamScores();render();renderLeagues();updateEloDate();
+  }));
   renderLeagues();
   render();
   updateEloDate();
@@ -530,6 +557,7 @@ async function load(){
   message.textContent='Unable to update scores. Retrying automatically.';
  }finally{
   refresh.disabled=false;
+  refreshRequests=null;
   busy=false;
  }
 }
