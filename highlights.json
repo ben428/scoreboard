@@ -2805,17 +2805,6 @@
       ],
       "videoId": "aeutZOl6fZU"
     },
-    "basketball/womens-college-basketball:401920983": {
-      "channelId": "UC0hy7TcR1gGD8nQBqrF2FaA",
-      "date": "2026-11-01T17:00Z",
-      "eventId": "401920983",
-      "sport": "basketball/womens-college-basketball",
-      "teamIds": [
-        "222",
-        "87"
-      ],
-      "videoId": "uOtrtfTZaW0"
-    },
     "basketball/womens-college-basketball:401921404": {
       "channelId": "UCpPY0eWJiNWxth5b2vz5Rwg",
       "date": "2026-11-03T01:00Z",
@@ -4102,8 +4091,19 @@
         "28"
       ],
       "videoId": "7UsUSgeGEqo"
+    },
+    "football/nfl:401873053": {
+      "channelId": "UCDVYQ4Zhbm3S2dlz7P1GBDg",
+      "date": "2026-11-15T14:30Z",
+      "eventId": "401873053",
+      "sport": "football/nfl",
+      "teamIds": [
+        "17",
+        "8"
+      ],
+      "videoId": "u9ggzabBnEo"
     }
   },
   "schema": 1,
-  "updated": "2026-11-15T15:41:53.715954+00:00"
+  "updated": "2026-11-15T17:56:27.702856+00:00"
 }
