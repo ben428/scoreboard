@@ -792,6 +792,17 @@
       ],
       "videoId": "IS9-MoqzLg0"
     },
+    "basketball/mens-college-basketball:401911188": {
+      "channelId": "UCLnfOCTbfqMy_3ah8OmTHEQ",
+      "date": "2026-11-15T00:30Z",
+      "eventId": "401911188",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "2132",
+        "2168"
+      ],
+      "videoId": "jYg8O0iUg_E"
+    },
     "basketball/mens-college-basketball:401911390": {
       "channelId": "UCqZQlzSHbVJrwrn5XvzrzcA",
       "date": "2026-11-03T02:00Z",
@@ -1373,7 +1384,7 @@
         "2641",
         "284"
       ],
-      "videoId": "X9IjvCBQ4Ng"
+      "videoId": "rxjMe9BJ9Ag"
     },
     "basketball/mens-college-basketball:401920304": {
       "channelId": "UC0hy7TcR1gGD8nQBqrF2FaA",
@@ -2012,6 +2023,17 @@
         "2325"
       ],
       "videoId": "V_QDGVJOxYQ"
+    },
+    "basketball/mens-college-basketball:401921775": {
+      "channelId": "UCAcXdiimhsuivSn2PxtsRFw",
+      "date": "2026-11-15T00:00Z",
+      "eventId": "401921775",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "222",
+        "2520"
+      ],
+      "videoId": "c-w4_Um0lvs"
     },
     "basketball/mens-college-basketball:401921802": {
       "channelId": "UCiWLfSweyRNmLpgEHekhoAg",
@@ -3091,6 +3113,28 @@
       ],
       "videoId": "63w29Psfen0"
     },
+    "football/college-football:401856857": {
+      "channelId": "UCzRWWsFjqHk1an4OnVPsl9g",
+      "date": "2026-11-14T22:30Z",
+      "eventId": "401856857",
+      "sport": "football/college-football",
+      "teamIds": [
+        "2116",
+        "9"
+      ],
+      "videoId": "QmuFBVHytEU"
+    },
+    "football/college-football:401856858": {
+      "channelId": "UCpwix-O6ceqMgdxhqIynzFA",
+      "date": "2026-11-15T00:00Z",
+      "eventId": "401856858",
+      "sport": "football/college-football",
+      "teamIds": [
+        "239",
+        "252"
+      ],
+      "videoId": "Z8e5nphKjPU"
+    },
     "football/college-football:401856859": {
       "channelId": "UCLnfOCTbfqMy_3ah8OmTHEQ",
       "date": "2026-11-14T17:00Z",
@@ -3135,6 +3179,39 @@
       ],
       "videoId": "meUbFprIfw8"
     },
+    "football/college-football:401856863": {
+      "channelId": "UCzRWWsFjqHk1an4OnVPsl9g",
+      "date": "2026-11-15T02:30Z",
+      "eventId": "401856863",
+      "sport": "football/college-football",
+      "teamIds": [
+        "197",
+        "2641"
+      ],
+      "videoId": "A3vrH7ioj3s"
+    },
+    "football/college-football:401856864": {
+      "channelId": "UCwNqHDsnBCKT-olwJwIFyfg",
+      "date": "2026-11-15T03:30Z",
+      "eventId": "401856864",
+      "sport": "football/college-football",
+      "teamIds": [
+        "12",
+        "254"
+      ],
+      "videoId": "PvH3_L3CEmY"
+    },
+    "football/college-football:401856882": {
+      "channelId": "UCzRWWsFjqHk1an4OnVPsl9g",
+      "date": "2026-11-15T00:45Z",
+      "eventId": "401856882",
+      "sport": "football/college-football",
+      "teamIds": [
+        "2579",
+        "8"
+      ],
+      "videoId": "kHHqrYIY1qw"
+    },
     "football/college-football:401856883": {
       "channelId": "UCzRWWsFjqHk1an4OnVPsl9g",
       "date": "2026-11-14T20:30Z",
@@ -3145,6 +3222,28 @@
         "61"
       ],
       "videoId": "fQ0LPoxkan4"
+    },
+    "football/college-football:401856884": {
+      "channelId": "UCzRWWsFjqHk1an4OnVPsl9g",
+      "date": "2026-11-14T23:15Z",
+      "eventId": "401856884",
+      "sport": "football/college-football",
+      "teamIds": [
+        "57",
+        "96"
+      ],
+      "videoId": "l7-MlYGtDnw"
+    },
+    "football/college-football:401856885": {
+      "channelId": "UCzRWWsFjqHk1an4OnVPsl9g",
+      "date": "2026-11-15T00:30Z",
+      "eventId": "401856885",
+      "sport": "football/college-football",
+      "teamIds": [
+        "251",
+        "99"
+      ],
+      "videoId": "zxdJnIenKKA"
     },
     "football/college-football:401856886": {
       "channelId": "UCzRWWsFjqHk1an4OnVPsl9g",
@@ -3279,7 +3378,7 @@
       "videoId": "qaq4Hv74_CY"
     },
     "football/college-football:401858294": {
-      "channelId": "UC0hy7TcR1gGD8nQBqrF2FaA",
+      "channelId": "UCqZQlzSHbVJrwrn5XvzrzcA",
       "date": "2026-11-14T20:30Z",
       "eventId": "401858294",
       "sport": "football/college-football",
@@ -3287,7 +3386,7 @@
         "103",
         "87"
       ],
-      "videoId": "-XgVql0M9ow"
+      "videoId": "vObTI0NKGcc"
     },
     "football/college-football:401858295": {
       "channelId": "UCzRWWsFjqHk1an4OnVPsl9g",
@@ -3322,6 +3421,28 @@
       ],
       "videoId": "h7U792_rKtM"
     },
+    "football/college-football:401858298": {
+      "channelId": "UCzRWWsFjqHk1an4OnVPsl9g",
+      "date": "2026-11-15T00:00Z",
+      "eventId": "401858298",
+      "sport": "football/college-football",
+      "teamIds": [
+        "153",
+        "97"
+      ],
+      "videoId": "cz24C-CefHc"
+    },
+    "football/college-football:401858299": {
+      "channelId": "UCzRWWsFjqHk1an4OnVPsl9g",
+      "date": "2026-11-15T00:30Z",
+      "eventId": "401858299",
+      "sport": "football/college-football",
+      "teamIds": [
+        "24",
+        "259"
+      ],
+      "videoId": "5mZCO5Qing4"
+    },
     "football/college-football:401858300": {
       "channelId": "UCzRWWsFjqHk1an4OnVPsl9g",
       "date": "2026-11-14T17:00Z",
@@ -3334,7 +3455,7 @@
       "videoId": "L5bnlxq1QKE"
     },
     "football/college-football:401858301": {
-      "channelId": "UC0hy7TcR1gGD8nQBqrF2FaA",
+      "channelId": "UCzRWWsFjqHk1an4OnVPsl9g",
       "date": "2026-11-14T17:00Z",
       "eventId": "401858301",
       "sport": "football/college-football",
@@ -3342,7 +3463,7 @@
         "154",
         "2567"
       ],
-      "videoId": "LKQeoFq8bj8"
+      "videoId": "f_Fsi6QxOW8"
     },
     "football/college-football:401858510": {
       "channelId": "UCpwix-O6ceqMgdxhqIynzFA",
@@ -3441,7 +3562,18 @@
         "30",
         "84"
       ],
-      "videoId": "rZQNdK_upuw"
+      "videoId": "UDalZLVpmfQ"
+    },
+    "football/college-football:401858519": {
+      "channelId": "UCqZQlzSHbVJrwrn5XvzrzcA",
+      "date": "2026-11-15T00:30Z",
+      "eventId": "401858519",
+      "sport": "football/college-football",
+      "teamIds": [
+        "2294",
+        "2509"
+      ],
+      "videoId": "dvVcT2UurNE"
     },
     "football/college-football:401858520": {
       "channelId": "UCpwix-O6ceqMgdxhqIynzFA",
@@ -3453,6 +3585,17 @@
         "275"
       ],
       "videoId": "fyla8gfRK2o"
+    },
+    "football/college-football:401858521": {
+      "channelId": "UCXnslB_TwYqScBRf4bPf3vA",
+      "date": "2026-11-14T22:30Z",
+      "eventId": "401858521",
+      "sport": "football/college-football",
+      "teamIds": [
+        "127",
+        "264"
+      ],
+      "videoId": "W3wWWncW5I0"
     },
     "football/college-football:401858522": {
       "channelId": "UCwNqHDsnBCKT-olwJwIFyfg",
@@ -3475,6 +3618,17 @@
         "2483"
       ],
       "videoId": "iWcESDUUNaQ"
+    },
+    "football/college-football:401858524": {
+      "channelId": "UCpwix-O6ceqMgdxhqIynzFA",
+      "date": "2026-11-15T00:00Z",
+      "eventId": "401858524",
+      "sport": "football/college-football",
+      "teamIds": [
+        "135",
+        "213"
+      ],
+      "videoId": "bRzpEfodyEA"
     },
     "football/college-football:401858525": {
       "channelId": "UCXnslB_TwYqScBRf4bPf3vA",
@@ -3530,6 +3684,17 @@
         "58"
       ],
       "videoId": "hsw0xmOZpoY"
+    },
+    "football/college-football:401864540": {
+      "channelId": "UCpwix-O6ceqMgdxhqIynzFA",
+      "date": "2026-11-15T03:00Z",
+      "eventId": "401864540",
+      "sport": "football/college-football",
+      "teamIds": [
+        "2638",
+        "2751"
+      ],
+      "videoId": "wvuurWKep2I"
     },
     "football/college-football:401866453": {
       "channelId": "UCzRWWsFjqHk1an4OnVPsl9g",
@@ -3940,5 +4105,5 @@
     }
   },
   "schema": 1,
-  "updated": "2026-11-15T01:51:26.031750+00:00"
+  "updated": "2026-11-15T15:41:53.715954+00:00"
 }
