@@ -345,9 +345,19 @@ function leagueHidden(i){
  const days=Object.values(d.dailyFeeds||{});
  return days.length===2&&days.every(day=>Array.isArray(day?.events)&&day.events.length===0)&&Array.isArray(d.events)&&d.events.length===0;
 }
+function orderedLeagues(){
+ const weekday=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short'}).format(new Date());
+ const rotation=['football/college-football','football/nfl','basketball/mens-college-basketball'];
+ const first=weekday==='Fri'||weekday==='Sat'?0:weekday==='Sun'||weekday==='Mon'?1:2;
+ const paths=rotation.slice(first).concat(rotation.slice(0,first));
+ return leagues.map((league,index)=>({league,index})).sort((a,b)=>{
+  const rank=path=>paths.includes(path)?paths.indexOf(path):paths.length;
+  return rank(a.league.path)-rank(b.league.path)||a.index-b.index;
+ });
+}
 function leagueFilters(){
  if(selectedLeague!==-1&&leagueHidden(selectedLeague))selectedLeague=-1;
- const labels=[{label:'All leagues',index:-1},...leagues.map((l,index)=>({label:l.name,index})).filter(item=>!leagueHidden(item.index))];
+ const labels=[{label:'All leagues',index:-1},...orderedLeagues().map(({league,index})=>({label:league.name,index})).filter(item=>!leagueHidden(item.index))];
  document.querySelector('#league-filters').innerHTML=labels.map(({label,index})=>`<button type="button" class="${selectedLeague===index?'active':''}" data-league="${index}" aria-pressed="${selectedLeague===index}">${esc(label)}</button>`).join('');
  document.querySelectorAll('#league-filters [data-league]').forEach(button=>button.onclick=()=>{
   selectedLeague=Number(button.dataset.league);
@@ -396,9 +406,17 @@ function competitorRank(c,l){
  const n=Number(c.curatedRank?.current);
  return Number.isInteger(n)&&n>=1&&n<=25?`<small class="rank">${n}</small>`:'';
 }
+function nflCoverageLink(feed){
+ const year=Number(feed?.season?.year),week=Number(feed?.week?.number);
+ const regular=Number(feed?.season?.type)===2;
+ const valid=regular&&Number.isInteger(year)&&year>=2000&&year<=2100&&Number.isInteger(week)&&week>=1&&week<=18;
+ const href=valid?`https://506sports.com/nfl.php?yr=${year}&wk=${week}`:'https://506sports.com/nfl/';
+ const label=valid?`NFL TV coverage · Week ${week} (506 Sports)`:'NFL TV coverage (506 Sports)';
+ return `<p class="coverage-link"><a href="${esc(href)}" target="_blank" rel="noopener noreferrer">${label}</a></p>`;
+}
 function renderLeagues(){
  leagueFilters();
- document.querySelector('#league-scores').innerHTML=leagues.map((l,i)=>{
+ document.querySelector('#league-scores').innerHTML=orderedLeagues().map(({league:l,index:i})=>{
   if(leagueHidden(i)||(selectedLeague!==-1&&selectedLeague!==i))return '';
   const d=leagueData[i];
   const events=leagueEvents(i);
@@ -414,7 +432,7 @@ function renderLeagues(){
    if(current.length)contents+=`<div class="leaguegames">${cards(current)}</div>`;
    if(completed.length)contents+=`<div class="league-completed"><h3 class="completed-heading">Completed games</h3><div class="leaguegames">${cards(completed)}</div></div>`;
   }
-  return `<section class="leagueboard"><div class="leagueheading"><h2><a href="${esc(l.standings)}" target="_blank" rel="noopener noreferrer" title="View ${esc(l.name)} standings on ${l.path==='baseball/mlb'?'MLB.com':'ESPN'}">${esc(l.name)}</a></h2></div>${contents}${feedNotice(d)}</section>`;
+  return `<section class="leagueboard"><div class="leagueheading"><h2><a href="${esc(l.standings)}" target="_blank" rel="noopener noreferrer" title="View ${esc(l.name)} standings on ${l.path==='baseball/mlb'?'MLB.com':'ESPN'}">${esc(l.name)}</a></h2></div>${l.path==='football/nfl'?nflCoverageLink(d):''}${contents}${feedNotice(d)}</section>`;
  }).join('');
 }
 function mergeEvents(feeds){return [...new Map(feeds.flatMap(d=>d.events||[]).map(e=>[e.id,e])).values()]}
