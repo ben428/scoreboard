@@ -4,7 +4,7 @@ import json
 import math
 import os
 from pathlib import Path
-from urllib.request import urlopen
+from urllib.request import Request, urlopen
 
 TEAMS = set('ARI ATL BAL BUF CAR CHI CIN CLE DAL DEN DET GB HOU IND JAX KC LAR LAC LV MIA MIN NE NO NYG NYJ PHI PIT SEA SF TB TEN WAS'.split())
 ALIASES = {'LA': 'LAR', 'STL': 'LAR', 'OAK': 'LV', 'SD': 'LAC', 'WSH': 'WAS'}
@@ -40,7 +40,9 @@ def validate(payload):
     return {'site': 'nflanalytic.com', 'season': season, 'updated': updated.isoformat(), 'weeks': weeks}
 
 def update(path):
-    with urlopen('https://nflanalytic.com/data/predictions.json', timeout=30) as response:
+    request = Request('https://nflanalytic.com/data/predictions.json',
+                      headers={'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json'})
+    with urlopen(request, timeout=30) as response:
         payload = json.load(response)
     clean = validate(payload)
     if path.exists():
