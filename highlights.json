@@ -1769,7 +1769,7 @@
         "2132",
         "2349"
       ],
-      "videoId": "q4krJ3Pulj8"
+      "videoId": "ZwVDLIc5L64"
     },
     "basketball/mens-college-basketball:401921755": {
       "channelId": "UCLnfOCTbfqMy_3ah8OmTHEQ",
@@ -2243,17 +2243,6 @@
         "2306"
       ],
       "videoId": "JVLfvW-_-Nw"
-    },
-    "basketball/womens-college-basketball:401907048": {
-      "channelId": "UCLnfOCTbfqMy_3ah8OmTHEQ",
-      "date": "2026-11-09T17:00Z",
-      "eventId": "401907048",
-      "sport": "basketball/womens-college-basketball",
-      "teamIds": [
-        "197",
-        "2466"
-      ],
-      "videoId": "rG6nF5rye-w"
     },
     "basketball/womens-college-basketball:401907049": {
       "channelId": "UCLnfOCTbfqMy_3ah8OmTHEQ",
@@ -3926,8 +3915,19 @@
         "23"
       ],
       "videoId": "9ORFm2xTKNs"
+    },
+    "football/nfl:401873077": {
+      "channelId": "UCDVYQ4Zhbm3S2dlz7P1GBDg",
+      "date": "2026-11-23T01:20Z",
+      "eventId": "401873077",
+      "sport": "football/nfl",
+      "teamIds": [
+        "16",
+        "25"
+      ],
+      "videoId": "ceMTl2eqYDA"
     }
   },
   "schema": 1,
-  "updated": "2026-11-23T02:42:29.896763+00:00"
+  "updated": "2026-11-23T20:18:25.833321+00:00"
 }
