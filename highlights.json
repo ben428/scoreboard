@@ -572,6 +572,17 @@
       ],
       "videoId": "ZjcFZkZw-9s"
     },
+    "basketball/mens-college-basketball:401909743": {
+      "channelId": "UCLnfOCTbfqMy_3ah8OmTHEQ",
+      "date": "2026-11-24T04:55Z",
+      "eventId": "401909743",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "12",
+        "36"
+      ],
+      "videoId": "nntKjduzEf0"
+    },
     "basketball/mens-college-basketball:401909752": {
       "channelId": "UCLnfOCTbfqMy_3ah8OmTHEQ",
       "date": "2026-11-11T01:00Z",
@@ -3896,5 +3907,5 @@
     }
   },
   "schema": 1,
-  "updated": "2026-11-24T05:58:25.553521+00:00"
+  "updated": "2026-11-24T19:32:49.783923+00:00"
 }
