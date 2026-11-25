@@ -44,6 +44,17 @@
       ],
       "videoId": "2BSpLsC77Vc"
     },
+    "basketball/mens-college-basketball:401906762": {
+      "channelId": "UCLnfOCTbfqMy_3ah8OmTHEQ",
+      "date": "2026-11-25T03:05Z",
+      "eventId": "401906762",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "239",
+        "333"
+      ],
+      "videoId": "v7bU0a1LHqY"
+    },
     "basketball/mens-college-basketball:401906772": {
       "channelId": "UCiWLfSweyRNmLpgEHekhoAg",
       "date": "2026-11-14T00:00Z",
@@ -561,6 +572,17 @@
       ],
       "videoId": "bIELo_wIoII"
     },
+    "basketball/mens-college-basketball:401909763": {
+      "channelId": "UC0hy7TcR1gGD8nQBqrF2FaA",
+      "date": "2026-11-25T06:00Z",
+      "eventId": "401909763",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "24",
+        "38"
+      ],
+      "videoId": "4QEsNWt38Eg"
+    },
     "basketball/mens-college-basketball:401909774": {
       "channelId": "UCLnfOCTbfqMy_3ah8OmTHEQ",
       "date": "2026-11-15T18:00Z",
@@ -626,6 +648,17 @@
         "2306"
       ],
       "videoId": "ZX40AvatWsw"
+    },
+    "basketball/mens-college-basketball:401909800": {
+      "channelId": "UCiWLfSweyRNmLpgEHekhoAg",
+      "date": "2026-11-25T05:49Z",
+      "eventId": "401909800",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "2250",
+        "2306"
+      ],
+      "videoId": "W5Hvlj47eIo"
     },
     "basketball/mens-college-basketball:401911014": {
       "channelId": "UC0hy7TcR1gGD8nQBqrF2FaA",
@@ -747,6 +780,17 @@
         "97"
       ],
       "videoId": "nSFtkNopZOM"
+    },
+    "basketball/mens-college-basketball:401915943": {
+      "channelId": "UCiWLfSweyRNmLpgEHekhoAg",
+      "date": "2026-11-25T04:18Z",
+      "eventId": "401915943",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "2483",
+        "2599"
+      ],
+      "videoId": "bIYzoW6km7I"
     },
     "basketball/mens-college-basketball:401916288": {
       "channelId": "UC93aXowsPvStnLBpOLy1Lqg",
@@ -3830,5 +3874,5 @@
     }
   },
   "schema": 1,
-  "updated": "2026-11-25T04:52:45.048368+00:00"
+  "updated": "2026-11-25T18:40:54.972471+00:00"
 }
