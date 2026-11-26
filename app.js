@@ -2,6 +2,26 @@ let noSpoilers=typeof location!=='undefined'&&/(?:^|[?&])spoilers=off(?:&|$)/i.t
 if(noSpoilers){document.documentElement?.classList?.add('no-spoilers');document.querySelector('#view-mode').textContent='No Spoilers Mode'}
 // Compatible with Safari on iOS 15; avoid newer timeout and array APIs.
 function lastItem(items){return items[items.length-1]}
+const dateFormatters=new Map();
+function dateFormatter(options){
+ const key=JSON.stringify(options);
+ if(!dateFormatters.has(key))dateFormatters.set(key,new Intl.DateTimeFormat('en-US',options));
+ return dateFormatters.get(key);
+}
+function setHTML(selector,html){
+ const node=document.querySelector(selector);
+ if(node.innerHTML!==html)node.innerHTML=html;
+}
+let renderPending=false;
+function scheduleRender(){
+ if(renderPending)return;
+ renderPending=true;
+ setTimeout(()=>{
+  renderPending=false;
+  syncTeamScores();render();renderLeagues();updateEloDate();
+ },40);
+}
+
 let refreshRequests=null;
 const pendingRequests=new Map();
 function fetchJSON(url){
@@ -25,11 +45,11 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 let data=[],busy=false;
 function date(d){
  if(d==null||d===''||!Number.isFinite(new Date(d).getTime()))return 'Date TBD';
- const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short',month:'numeric',day:'numeric'}).formatToParts(new Date(d));
+ const parts=dateFormatter({timeZone:'America/New_York',weekday:'short',month:'numeric',day:'numeric'}).formatToParts(new Date(d));
  const part=k=>parts.find(p=>p.type===k).value;
  return `${part('weekday')} ${part('month')}/${part('day')}`;
 }
-function time(d){return d==null||d===''||!Number.isFinite(new Date(d).getTime())?'Time TBD':new Date(d).toLocaleTimeString('en-US',{timeZone:'America/New_York',hour:'numeric',minute:'2-digit'})}
+function time(d){return d==null||d===''||!Number.isFinite(new Date(d).getTime())?'Time TBD':dateFormatter({timeZone:'America/New_York',hour:'numeric',minute:'2-digit'}).format(new Date(d))}
 function updateToday(){document.querySelector('#today').textContent=date(new Date())}
 updateToday();
 
@@ -145,7 +165,7 @@ const mlbSchedules=new Map();
 const mlbGames=new Map();
 function mlbDate(e){
  if(!Number.isFinite(eventTime(e)))return '';
- const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date(e.date));
+ const parts=dateFormatter({timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date(e.date));
  return ['year','month','day'].map(k=>parts.find(p=>p.type===k).value).join('-');
 }
 function mlbName(name){return String(name||'').toLowerCase().replace(/^(oakland|sacramento) /,'').replace(/[^a-z0-9]/g,'')}
@@ -231,7 +251,7 @@ function highlightsLink(e,path,events=[]){
  const names=competitors.slice().sort((a,b)=>(a.homeAway==='home')-(b.homeAway==='home')).map(c=>c.team?.displayName||c.team?.shortDisplayName);
  if(names.length!==2||names.some(name=>!name))return '';
  const sports={'baseball/mlb':'MLB baseball','football/nfl':'NFL football','football/college-football':'college football','basketball/mens-college-basketball':"men's college basketball",'basketball/womens-college-basketball':"women's college basketball"};
- const calendarDate=d=>new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'long',day:'numeric'}).format(new Date(d));
+ const calendarDate=d=>dateFormatter({timeZone:'America/New_York',year:'numeric',month:'long',day:'numeric'}).format(new Date(d));
  const fullDate=calendarDate(e.date);
  let gameNumber='';
  if(path==='baseball/mlb'){
@@ -291,7 +311,7 @@ function relevant(e,now=Date.now()){
 function feedNotice(d){return d?.partial||d?.stale?'<p class="details" role="status">Some scores may be out of date. Retrying automatically.</p>':''}
 function render(){
  const now=Date.now();
- document.querySelector('#cards').innerHTML=teams.map((t,i)=>{
+ const cards=teams.map((t,i)=>{
   const d=data[i];
   if(!d)return '';
   const events=(d?.events||[]).slice().sort(chronological);
@@ -323,7 +343,7 @@ function render(){
   if(at===null||bt===null)return at===bt?a.index-b.index:at===null?1:-1;
   return (a.group===1?bt-at:at-bt)||a.index-b.index;
  }).map(card=>card.html).join('');
- if(!document.querySelector('#cards').innerHTML)document.querySelector('#cards').innerHTML=`<div class="empty">${teams.some((t,i)=>!data[i])?'Loading favorites…':noSpoilers?'No recent games.':'No live games, recent results, or games in the next seven days.'}</div>`;
+ setHTML('#cards',cards||`<div class="empty">${teams.some((t,i)=>!data[i])?'Loading favorites…':noSpoilers?'No recent games.':'No live games, recent results, or games in the next seven days.'}</div>`);
 }
 
 
@@ -340,13 +360,13 @@ function leagueEvents(i){
 }
 function leagueHidden(i){
  const d=leagueData[i];
- if(!d||d.error||d.partial||d.stale||!Array.isArray(d.events))return false;
+ if(!d||d.loading||d.error||d.partial||d.stale||!Array.isArray(d.events))return false;
  if(leagues[i]?.path!=='baseball/mlb')return leagueEvents(i).length===0;
  const days=Object.values(d.dailyFeeds||{});
  return days.length===2&&days.every(day=>Array.isArray(day?.events)&&day.events.length===0)&&Array.isArray(d.events)&&d.events.length===0;
 }
 function orderedLeagues(){
- const weekday=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short'}).format(new Date());
+ const weekday=dateFormatter({timeZone:'America/New_York',weekday:'short'}).format(new Date());
  const rotation=['football/college-football','football/nfl','basketball/mens-college-basketball'];
  const first=weekday==='Fri'||weekday==='Sat'?0:weekday==='Sun'||weekday==='Mon'?1:2;
  const paths=rotation.slice(first).concat(rotation.slice(0,first));
@@ -358,7 +378,7 @@ function orderedLeagues(){
 function leagueFilters(){
  if(selectedLeague!==-1&&leagueHidden(selectedLeague))selectedLeague=-1;
  const labels=[{label:'All leagues',index:-1},...orderedLeagues().map(({league,index})=>({label:league.name,index})).filter(item=>!leagueHidden(item.index))];
- document.querySelector('#league-filters').innerHTML=labels.map(({label,index})=>`<button type="button" class="${selectedLeague===index?'active':''}" data-league="${index}" aria-pressed="${selectedLeague===index}">${esc(label)}</button>`).join('');
+ setHTML('#league-filters',labels.map(({label,index})=>`<button type="button" class="${selectedLeague===index?'active':''}" data-league="${index}" aria-pressed="${selectedLeague===index}">${esc(label)}</button>`).join(''));
  document.querySelectorAll('#league-filters [data-league]').forEach(button=>button.onclick=()=>{
   selectedLeague=Number(button.dataset.league);
   leagueFilters();renderLeagues();
@@ -416,7 +436,7 @@ function nflCoverageLink(feed){
 }
 function renderLeagues(){
  leagueFilters();
- document.querySelector('#league-scores').innerHTML=orderedLeagues().map(({league:l,index:i})=>{
+ setHTML('#league-scores',orderedLeagues().map(({league:l,index:i})=>{
   if(leagueHidden(i)||(selectedLeague!==-1&&selectedLeague!==i))return '';
   const d=leagueData[i];
   const events=leagueEvents(i);
@@ -433,11 +453,11 @@ function renderLeagues(){
    if(completed.length)contents+=`<div class="league-completed"><h3 class="completed-heading">Completed games</h3><div class="leaguegames">${cards(completed)}</div></div>`;
   }
   return `<section class="leagueboard"><div class="leagueheading"><h2><a href="${esc(l.standings)}" target="_blank" rel="noopener noreferrer" title="View ${esc(l.name)} standings on ${l.path==='baseball/mlb'?'MLB.com':'ESPN'}">${esc(l.name)}</a></h2></div>${l.path==='football/nfl'?nflCoverageLink(d):''}${contents}${feedNotice(d)}</section>`;
- }).join('');
+ }).join(''));
 }
 function mergeEvents(feeds){return [...new Map(feeds.flatMap(d=>d.events||[]).map(e=>[e.id,e])).values()]}
 function retainOnFailure(previous){return previous?.events?{...previous,error:false,partial:true,stale:true}:{error:true}}
-async function loadLeagues(){
+async function loadLeagues(afterFavorites=Promise.resolve()){
  await Promise.allSettled(leagues.map(async(l,i)=>{
   const previous=leagueData[i];
   try{
@@ -445,12 +465,20 @@ async function loadLeagues(){
    if(l.ranked)url+='&groups='+encodeURIComponent(l.rankedGroup||'80');
    if(l.group)url+='&groups='+encodeURIComponent(l.group);
    if(l.windowDays){
-    const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+    const parts=dateFormatter({timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
     const part=k=>parts.find(p=>p.type===k).value;
     const today=new Date(Date.UTC(Number(part('year')),Number(part('month'))-1,Number(part('day'))));
     const dates=[];
     for(let offset=-1;offset<=l.windowDays;offset++){const day=new Date(today);day.setUTCDate(day.getUTCDate()+offset);dates.push(day.toISOString().slice(0,10).replace(/-/g,''))}
-    const results=await Promise.allSettled(dates.map(d=>fetchJSON(url+'&dates='+d)));
+    const todayDate=today.toISOString().slice(0,10).replace(/-/g,'');
+    const todayResult=await Promise.allSettled([fetchJSON(url+'&dates='+todayDate)]);
+    if(todayResult[0].status==='fulfilled'){
+     const retained=(previous?.events||[]).filter(event=>mlbDate(event).replace(/-/g,'')!==todayDate);
+     leagueData[i]={...previous,events:mergeEvents([{events:retained},todayResult[0].value]),loading:true};
+     scheduleRender();
+    }
+    await afterFavorites;
+    const results=await Promise.allSettled(dates.map(d=>d===todayDate?(todayResult[0].status==='fulfilled'?Promise.resolve(todayResult[0].value):Promise.reject(todayResult[0].reason)):fetchJSON(url+'&dates='+d)));
     const dailyFeeds={};
     results.forEach((r,j)=>{
      if(r.status==='fulfilled')dailyFeeds[dates[j]]=r.value;
@@ -459,7 +487,7 @@ async function loadLeagues(){
     if(!Object.keys(dailyFeeds).length)throw Error('Feed unavailable');
     leagueData[i]={events:mergeEvents(Object.values(dailyFeeds)),dailyFeeds,partial:results.some(r=>r.status==='rejected')};
    }else if(l.name==='MLB'){
-    const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+    const parts=dateFormatter({timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
     const part=k=>parts.find(p=>p.type===k).value;
     // Subtract a calendar day, rather than 24 hours, to handle daylight saving changes.
     const today=new Date(Date.UTC(Number(part('year')),Number(part('month'))-1,Number(part('day'))));
@@ -479,7 +507,7 @@ async function loadLeagues(){
     leagueData[i]=await fetchJSON(url);
    }
   }catch{leagueData[i]=retainOnFailure(previous)}
-  syncTeamScores();render();renderLeagues();
+  scheduleRender();
  }));
  renderLeagues();
 }
@@ -519,7 +547,7 @@ async function loadTeam(t,i){
   }
   data[i]={events:[...events.values()],seasonFeeds,partial:results.some(r=>r.status==='rejected')};
  }catch{data[i]=retainOnFailure(previous)}
- syncTeamScores();render();
+ scheduleRender();
 }
 
 function syncTeamScores(){
@@ -545,13 +573,14 @@ async function load(){
  message.textContent='Updating scores…';
  try{
   updateToday();
-  const results=await Promise.allSettled([loadLeagues(),...teams.map(loadTeam)]);
+  const favorites=teams.map(loadTeam);
+  const results=await Promise.allSettled([loadLeagues(Promise.allSettled(favorites)),...favorites]);
   if(results.some(r=>r.status==='rejected'))throw Error('Unable to render scores');
   syncTeamScores();
   render();renderLeagues();
   await Promise.allSettled([loadMLBLinks(),loadNFLElo(),loadUpcomingRecords(),loadHighlights(),loadCompetitive()].map(async request=>{
    await request;
-   syncTeamScores();render();renderLeagues();updateEloDate();
+   scheduleRender();
   }));
   renderLeagues();
   render();
