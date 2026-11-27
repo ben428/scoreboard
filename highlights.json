@@ -220,6 +220,17 @@
       ],
       "videoId": "8bXLTxhVWJY"
     },
+    "basketball/mens-college-basketball:401909506": {
+      "channelId": "UC0hy7TcR1gGD8nQBqrF2FaA",
+      "date": "2026-11-27T00:00Z",
+      "eventId": "401909506",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "221",
+        "305"
+      ],
+      "videoId": "SixAwD0KDIw"
+    },
     "basketball/mens-college-basketball:401909515": {
       "channelId": "UC0hy7TcR1gGD8nQBqrF2FaA",
       "date": "2026-11-13T23:00Z",
@@ -814,17 +825,6 @@
       ],
       "videoId": "bIYzoW6km7I"
     },
-    "basketball/mens-college-basketball:401916288": {
-      "channelId": "UC93aXowsPvStnLBpOLy1Lqg",
-      "date": "2026-11-12T23:30Z",
-      "eventId": "401916288",
-      "sport": "basketball/mens-college-basketball",
-      "teamIds": [
-        "2635",
-        "84"
-      ],
-      "videoId": "d546l7KCB8Y"
-    },
     "basketball/mens-college-basketball:401916289": {
       "channelId": "UCqZQlzSHbVJrwrn5XvzrzcA",
       "date": "2026-11-18T00:30Z",
@@ -891,17 +891,6 @@
       ],
       "videoId": "H2P_ry0SEbM"
     },
-    "basketball/mens-college-basketball:401916306": {
-      "channelId": "UC93aXowsPvStnLBpOLy1Lqg",
-      "date": "2026-11-13T01:00Z",
-      "eventId": "401916306",
-      "sport": "basketball/mens-college-basketball",
-      "teamIds": [
-        "135",
-        "2582"
-      ],
-      "videoId": "mxnloOAr8Hw"
-    },
     "basketball/mens-college-basketball:401916307": {
       "channelId": "UC93aXowsPvStnLBpOLy1Lqg",
       "date": "2026-11-17T01:00Z",
@@ -967,17 +956,6 @@
         "2441"
       ],
       "videoId": "o4aJcJf54W8"
-    },
-    "basketball/mens-college-basketball:401917176": {
-      "channelId": "UC93aXowsPvStnLBpOLy1Lqg",
-      "date": "2026-11-12T23:30Z",
-      "eventId": "401917176",
-      "sport": "basketball/mens-college-basketball",
-      "teamIds": [
-        "213",
-        "2385"
-      ],
-      "videoId": "M8iQVlcv34c"
     },
     "basketball/mens-college-basketball:401917181": {
       "channelId": "UC93aXowsPvStnLBpOLy1Lqg",
@@ -1155,16 +1133,16 @@
       ],
       "videoId": "IG7YjNlRKKI"
     },
-    "basketball/mens-college-basketball:401919041": {
-      "channelId": "UCLnfOCTbfqMy_3ah8OmTHEQ",
-      "date": "2026-11-13T01:00Z",
-      "eventId": "401919041",
+    "basketball/mens-college-basketball:401918972": {
+      "channelId": "UC0hy7TcR1gGD8nQBqrF2FaA",
+      "date": "2026-11-27T00:00Z",
+      "eventId": "401918972",
       "sport": "basketball/mens-college-basketball",
       "teamIds": [
-        "197",
-        "245"
+        "2567",
+        "99"
       ],
-      "videoId": "vI4jzCBDs2o"
+      "videoId": "4chvqnbsFzA"
     },
     "basketball/mens-college-basketball:401919042": {
       "channelId": "UCLnfOCTbfqMy_3ah8OmTHEQ",
@@ -1430,6 +1408,50 @@
       ],
       "videoId": "oGh0dLcalDQ"
     },
+    "basketball/mens-college-basketball:401920528": {
+      "channelId": "UCiWLfSweyRNmLpgEHekhoAg",
+      "date": "2026-11-26T18:00Z",
+      "eventId": "401920528",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "120",
+        "21"
+      ],
+      "videoId": "1gn9StU5EBg"
+    },
+    "basketball/mens-college-basketball:401920529": {
+      "channelId": "UCiWLfSweyRNmLpgEHekhoAg",
+      "date": "2026-11-26T20:30Z",
+      "eventId": "401920529",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "2633",
+        "66"
+      ],
+      "videoId": "pirrtJwWdk8"
+    },
+    "basketball/mens-college-basketball:401920537": {
+      "channelId": "UCiWLfSweyRNmLpgEHekhoAg",
+      "date": "2026-11-26T20:30Z",
+      "eventId": "401920537",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "130",
+        "2390"
+      ],
+      "videoId": "jLEGv64WtsI"
+    },
+    "basketball/mens-college-basketball:401920538": {
+      "channelId": "UCiWLfSweyRNmLpgEHekhoAg",
+      "date": "2026-11-26T23:00Z",
+      "eventId": "401920538",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "156",
+        "2628"
+      ],
+      "videoId": "nZ1SNuNStGk"
+    },
     "basketball/mens-college-basketball:401920681": {
       "channelId": "UCqZQlzSHbVJrwrn5XvzrzcA",
       "date": "2026-11-16T00:00Z",
@@ -1628,6 +1650,17 @@
       ],
       "videoId": "GT5JMSrd764"
     },
+    "basketball/mens-college-basketball:401921674": {
+      "channelId": "UCLnfOCTbfqMy_3ah8OmTHEQ",
+      "date": "2026-11-26T19:00Z",
+      "eventId": "401921674",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "2579",
+        "9"
+      ],
+      "videoId": "WGJHLuFvoG4"
+    },
     "basketball/mens-college-basketball:401921691": {
       "channelId": "UC0hy7TcR1gGD8nQBqrF2FaA",
       "date": "2026-11-21T02:30Z",
@@ -1782,17 +1815,6 @@
       ],
       "videoId": "LjAWFdASrlg"
     },
-    "basketball/mens-college-basketball:401921741": {
-      "channelId": "UCLnfOCTbfqMy_3ah8OmTHEQ",
-      "date": "2026-11-13T02:00Z",
-      "eventId": "401921741",
-      "sport": "basketball/mens-college-basketball",
-      "teamIds": [
-        "147",
-        "252"
-      ],
-      "videoId": "N14wxLi8CH8"
-    },
     "basketball/mens-college-basketball:401921742": {
       "channelId": "UCLnfOCTbfqMy_3ah8OmTHEQ",
       "date": "2026-11-19T02:00Z",
@@ -1836,17 +1858,6 @@
         "238"
       ],
       "videoId": "Hcv-x4lN1YQ"
-    },
-    "basketball/mens-college-basketball:401921768": {
-      "channelId": "UCLnfOCTbfqMy_3ah8OmTHEQ",
-      "date": "2026-11-13T00:00Z",
-      "eventId": "401921768",
-      "sport": "basketball/mens-college-basketball",
-      "teamIds": [
-        "2382",
-        "277"
-      ],
-      "videoId": "rC-8cfhftGs"
     },
     "basketball/mens-college-basketball:401921775": {
       "channelId": "UCAcXdiimhsuivSn2PxtsRFw",
@@ -2046,6 +2057,17 @@
       ],
       "videoId": "FruFQBldKKo"
     },
+    "basketball/mens-college-basketball:401929282": {
+      "channelId": "UC0hy7TcR1gGD8nQBqrF2FaA",
+      "date": "2026-11-26T18:30Z",
+      "eventId": "401929282",
+      "sport": "basketball/mens-college-basketball",
+      "teamIds": [
+        "103",
+        "2116"
+      ],
+      "videoId": "UM1BhZeXT-U"
+    },
     "basketball/mens-college-basketball:401929287": {
       "channelId": "UC0hy7TcR1gGD8nQBqrF2FaA",
       "date": "2026-11-26T02:29Z",
@@ -2089,17 +2111,6 @@
         "2829"
       ],
       "videoId": "wmPMXiEPpmY"
-    },
-    "basketball/womens-college-basketball:401906078": {
-      "channelId": "UC0hy7TcR1gGD8nQBqrF2FaA",
-      "date": "2026-11-13T01:00Z",
-      "eventId": "401906078",
-      "sport": "basketball/womens-college-basketball",
-      "teamIds": [
-        "2050",
-        "97"
-      ],
-      "videoId": "AGQn3IpRcyw"
     },
     "basketball/womens-college-basketball:401906079": {
       "channelId": "UCiWLfSweyRNmLpgEHekhoAg",
@@ -2211,17 +2222,6 @@
       ],
       "videoId": "JVLfvW-_-Nw"
     },
-    "basketball/womens-college-basketball:401907049": {
-      "channelId": "UCLnfOCTbfqMy_3ah8OmTHEQ",
-      "date": "2026-11-12T23:00Z",
-      "eventId": "401907049",
-      "sport": "basketball/womens-college-basketball",
-      "teamIds": [
-        "197",
-        "202"
-      ],
-      "videoId": "y6uUkuHue9M"
-    },
     "basketball/womens-college-basketball:401907051": {
       "channelId": "UCAcXdiimhsuivSn2PxtsRFw",
       "date": "2026-11-19T00:30Z",
@@ -2265,17 +2265,6 @@
         "277"
       ],
       "videoId": "4tT0aw7jFug"
-    },
-    "basketball/womens-college-basketball:401911739": {
-      "channelId": "UCpPY0eWJiNWxth5b2vz5Rwg",
-      "date": "2026-11-12T23:30Z",
-      "eventId": "401911739",
-      "sport": "basketball/womens-college-basketball",
-      "teamIds": [
-        "194",
-        "41"
-      ],
-      "videoId": "Lkrht-VgIUM"
     },
     "basketball/womens-college-basketball:401911740": {
       "channelId": "UCAcXdiimhsuivSn2PxtsRFw",
@@ -2321,17 +2310,6 @@
       ],
       "videoId": "tA_SKvFHlhc"
     },
-    "basketball/womens-college-basketball:401913056": {
-      "channelId": "UCpPY0eWJiNWxth5b2vz5Rwg",
-      "date": "2026-11-13T03:30Z",
-      "eventId": "401913056",
-      "sport": "basketball/womens-college-basketball",
-      "teamIds": [
-        "12",
-        "26"
-      ],
-      "videoId": "0niUaM2XJbo"
-    },
     "basketball/womens-college-basketball:401913059": {
       "channelId": "UCLnfOCTbfqMy_3ah8OmTHEQ",
       "date": "2026-11-23T22:00Z",
@@ -2353,28 +2331,6 @@
         "26"
       ],
       "videoId": "QEzmB7WvF1w"
-    },
-    "basketball/womens-college-basketball:401915886": {
-      "channelId": "UCiWLfSweyRNmLpgEHekhoAg",
-      "date": "2026-11-13T00:00Z",
-      "eventId": "401915886",
-      "sport": "basketball/womens-college-basketball",
-      "teamIds": [
-        "228",
-        "2579"
-      ],
-      "videoId": "sKd31qYDHC0"
-    },
-    "basketball/womens-college-basketball:401915908": {
-      "channelId": "UC0hy7TcR1gGD8nQBqrF2FaA",
-      "date": "2026-11-13T00:00Z",
-      "eventId": "401915908",
-      "sport": "basketball/womens-college-basketball",
-      "teamIds": [
-        "150",
-        "2450"
-      ],
-      "videoId": "iplz_A-gNnM"
     },
     "basketball/womens-college-basketball:401915909": {
       "channelId": "UCiWLfSweyRNmLpgEHekhoAg",
@@ -2419,17 +2375,6 @@
         "315"
       ],
       "videoId": "YUURKMUPJy0"
-    },
-    "basketball/womens-college-basketball:401917941": {
-      "channelId": "UCLnfOCTbfqMy_3ah8OmTHEQ",
-      "date": "2026-11-13T00:30Z",
-      "eventId": "401917941",
-      "sport": "basketball/womens-college-basketball",
-      "teamIds": [
-        "2545",
-        "2628"
-      ],
-      "videoId": "ElQoPHBw0pg"
     },
     "basketball/womens-college-basketball:401917942": {
       "channelId": "UCLnfOCTbfqMy_3ah8OmTHEQ",
@@ -2650,17 +2595,6 @@
         "264"
       ],
       "videoId": "KG694JPw9nA"
-    },
-    "basketball/womens-college-basketball:401921495": {
-      "channelId": "UCpPY0eWJiNWxth5b2vz5Rwg",
-      "date": "2026-11-13T03:00Z",
-      "eventId": "401921495",
-      "sport": "basketball/womens-college-basketball",
-      "teamIds": [
-        "264",
-        "2934"
-      ],
-      "videoId": "FqKZFJAP-7Q"
     },
     "basketball/womens-college-basketball:401923012": {
       "channelId": "UCqZQlzSHbVJrwrn5XvzrzcA",
@@ -3509,17 +3443,6 @@
       ],
       "videoId": "ys7p-K4ubPo"
     },
-    "football/college-football:401862824": {
-      "channelId": "UCzRWWsFjqHk1an4OnVPsl9g",
-      "date": "2026-11-13T01:00Z",
-      "eventId": "401862824",
-      "sport": "football/college-football",
-      "teamIds": [
-        "235",
-        "58"
-      ],
-      "videoId": "hsw0xmOZpoY"
-    },
     "football/college-football:401862830": {
       "channelId": "UCzRWWsFjqHk1an4OnVPsl9g",
       "date": "2026-11-20T00:30Z",
@@ -3640,17 +3563,6 @@
         "2711"
       ],
       "videoId": "ykE4AUnbTiM"
-    },
-    "football/nfl:401873052": {
-      "channelId": "UCDVYQ4Zhbm3S2dlz7P1GBDg",
-      "date": "2026-11-13T01:15Z",
-      "eventId": "401873052",
-      "sport": "football/nfl",
-      "teamIds": [
-        "19",
-        "28"
-      ],
-      "videoId": "7UsUSgeGEqo"
     },
     "football/nfl:401873053": {
       "channelId": "UCDVYQ4Zhbm3S2dlz7P1GBDg",
@@ -3948,8 +3860,30 @@
         "9"
       ],
       "videoId": "__40m4hxmdA"
+    },
+    "football/nfl:401873080": {
+      "channelId": "UCDVYQ4Zhbm3S2dlz7P1GBDg",
+      "date": "2026-11-26T21:30Z",
+      "eventId": "401873080",
+      "sport": "football/nfl",
+      "teamIds": [
+        "21",
+        "6"
+      ],
+      "videoId": "jXmdND-z0_8"
+    },
+    "football/nfl:401873081": {
+      "channelId": "UCDVYQ4Zhbm3S2dlz7P1GBDg",
+      "date": "2026-11-26T18:00Z",
+      "eventId": "401873081",
+      "sport": "football/nfl",
+      "teamIds": [
+        "3",
+        "8"
+      ],
+      "videoId": "6mDrkExeNSY"
     }
   },
   "schema": 1,
-  "updated": "2026-11-26T19:10:53.737963+00:00"
+  "updated": "2026-11-27T04:12:30.079585+00:00"
 }
